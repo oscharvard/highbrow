@@ -1568,7 +1568,6 @@ function buildSelectionRows(ssn, notesBySN){
     var rows = [];
     var maxNoteCount=0;
     var minNoteCount=Number.MAX_VALUE;
-    // or is this what's slow? break out methods and profile.
     for (int i=0; i < ssn.children.length; i++ ) {
 	var sn = ssn.children[i];
 	var textString = sequence.data ? sequence.data.substr(sn.start,(sn.stop-sn.start+1)) : "Not sure what to show here instead of raw text."; 
@@ -1669,7 +1668,9 @@ void updateSelectionPanel(ssn){
 
 void updateBottomHtml(selectionString){
     var bottomHtml = selectionString;
-    $('#selectionPanel').html(bottomHtml); 
+    // not sure why, but jquery is significantly slower than raw js here.
+    //$('#selectionPanel').html(bottomHtml); 
+    document.getElementById('selectionPanel').innerHTML=bottomHtml;
     $(".hbw2").width(mapWidth/2);
 }
 
