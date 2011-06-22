@@ -6,20 +6,20 @@ RegExp.escape = function(text) {
 			};
 
 $(document).ready(function() {
-  w = document.width;
-  HB=null;
-  $("#zoomIn").click(function(e)   { HB.zoomIn()   ; e.preventDefault(); });
-  $("#zoomOut").click(function(e)  { HB.zoomOut()  ; e.preventDefault(); });
-  $("#panLeft").click(function(e)  { HB.panLeft()  ; e.preventDefault(); });
-  $("#panRight").click(function(e) { HB.panRight() ; e.preventDefault(); });
-  $("#search").click(function(e)   { HB.openSearchDialog() ; e.preventDefault(); });
-  $("#settings").click(function(e) { HB.openSettingsDialog() ; e.preventDefault(); });
-  $("#addNote").click(function(e) { HB.openEditDialog() ; e.preventDefault(); });
-  $(window).resize(function() {
-	  var p = HB;		    
-	  p.adjustBounds();
-	 
-      });
+	w = document.width;
+	HB=null;
+	$("#zoomIn").click(function(e)   { HB.zoomIn()   ; e.preventDefault(); });
+	$("#zoomOut").click(function(e)  { HB.zoomOut()  ; e.preventDefault(); });
+	$("#panLeft").click(function(e)  { HB.panLeft()  ; e.preventDefault(); });
+	$("#panRight").click(function(e) { HB.panRight() ; e.preventDefault(); });
+	$("#search").click(function(e)   { HB.openSearchDialog() ; e.preventDefault(); });
+	$("#settings").click(function(e) { HB.openSettingsDialog() ; e.preventDefault(); });
+	$("#addNote").click(function(e) { HB.openEditDialog() ; e.preventDefault(); });
+	$(window).resize(function() {
+		var p = HB;		    
+		p.adjustBounds();
+	    });
+    });
 
 var minCharPerPx = .01; /// minimum characters per pixel. make configurable at some point.
 
@@ -96,7 +96,7 @@ function ajaxTile(track,level,tileType,tileNumber){
     
     // user real LRU cache after you get simple hash table caching working.
     // there are at least 2 js libraries to do this.
-    // 2 kinds of tiles: score tiles and feature tiles.
+    // 2 kinds of tiles: score tiles and note tiles.
 
     var suffix = "";
     if ( tileType != "scores") {
@@ -159,7 +159,7 @@ PFont monoFont;
 PFont fancyFont;
 PFont fancyFontItalic;
 int defaultTrackSize=20;
-Object selectedSF;
+Object selectedSN;
 Object levels;
 var currentLevel;
 var currentGroup;
@@ -327,6 +327,26 @@ void draw(){
   //rect( 0, 0, mapWidth, height );                  
 }
 
+
+void makeTrackNameEditable(e,trackId,row,col){
+    // replace event target with text input.
+    //alert("trackId: " + trackId + "row: " + row + " col: " + col);
+    var t = trackById[trackId];
+    var eventHTML = "\"HB.updateTrackName(event,'" + trackId + "'," + row + "," + col + ")\"";
+    e.target.innerHTML ="<input type=\"text\" value=\"" + t.name + "\" onblur=" + eventHTML + " onkeyup=" + eventHTML + "/>";    
+    //alert("event: a" + e);
+    //alert("editTrackName:" +trackId);
+}
+
+void updateTrackName(e,trackId,row,col){
+    if ( e.type === "blur" || e.keyCode === 13 ) {
+	var t = trackById[trackId];
+	t.name = e.target.value;
+	$('#trackTable').dataTable().fnUpdate( t.name, row, col );
+	e.target.parentElement.innerHTML=t.name;
+    }
+}
+
 function initSequence(sequence){
     if ( sequence.type === "video" ) {
 	sequence.length = duration2position(sequence.length);
@@ -347,20 +367,20 @@ function duration2position(duration){
     return duration;
 }
 
-void positionDurationReferences(){
+void positionDurationNotes(){
     for (int ti=0; ti < tracks.length(); ti++ ) {
 	var t = tracks[ti];
 	for ( int ri=0; ri < t.notes.length(); ri++ ) {
-	    var ref = t.notes[ri];
-	    ref.start = duration2position(ref.start);
-	    ref.stop  = duration2position(ref.stop);
+	    var n = t.notes[ri];
+	    n.start = duration2position(n.start);
+	    n.stop  = duration2position(n.stop);
 	}
     }
 }
 
 void initTracks(tracks){
     if ( sequence.type == "video" ) {
-	positionDurationReferences();
+	positionDurationNotes();
     }
     // add track groups to tracks. also rethink as with structure.
     for (int gi=groups.length-1; gi > -1; gi-- ) {
@@ -485,11 +505,11 @@ function refreshTrackTables(){
 
 
 void drawSelections(){
-  if ( selectedSF ) {
-     Object sf = selectedSF;
-     //text("There is a selected SF",100,100);
-     int a = visiblePxInt(sf.start);
-     int z = visiblePxInt(sf.stop);
+  if ( selectedSN ) {
+     Object sn = selectedSN;
+     //text("There is a selected SN",100,100);
+     int a = visiblePxInt(sn.start);
+     int z = visiblePxInt(sn.stop);
      stroke(BLUE[0],BLUE[1],BLUE[2],100);
      fill(BLUE[0],BLUE[1],BLUE[2],100);
      rect(a,0,z-a+1,height);
@@ -1156,37 +1176,37 @@ void mouseClicked(){
     // get the biggest structural feature that is smaller than some threshold in this region.
     // if not structural features or nothing suitable, just get some default range of characters centered on click point.  
     // hack for now for bible.
-    var sf;
-    var sftrack = tracks[0];
-    for (int i =0; i < sftrack.notes.length; i++ ) {
-	if ( sf ) {
+    var sn;
+    var sntrack = tracks[0];
+    for (int i =0; i < sntrack.notes.length; i++ ) {
+	if ( sn ) {
 	    break;
 	}
-	var book = sftrack.notes[i];
+	var book = sntrack.notes[i];
 	if ( overlaps(a,z,book.start,book.stop) ) {
 	    for (int ii =0; ii < book.children.length; ii++ ) {
 		var chapter = book.children[ii];
 		if ( overlaps(a,z,chapter.start,chapter.stop) ) {
 		    if ( pxPerChar() > .1 ) {
 			// zoomed in enough to see verses and actually clicked on one.
-			// question: do you have to click on an sf to select it? I think so. 
+			// question: do you have to click on an sn to select it? I think so. 
 			// clicking elsewhere should deselect (or possibly do something else)
 			for (int iii =0; iii < chapter.children.length; iii++ ) {
 			    var verse = chapter.children[iii];
 			    if ( overlaps(a,z,verse.start,verse.stop) ) {
-				sf = verse;
+				sn = verse;
 				break;
 			    }
 			} 
 		    } else {
-			sf = chapter;
+			sn = chapter;
 		    }
 		    break;
 		}
 	    }
 	}
     }
-    updateSelectionPanel(sf);
+    updateSelectionPanel(sn);
 }
 
 function tag(t,args){
@@ -1249,7 +1269,7 @@ void openEditDialog(){
 }
 
 void openSettingsDialog(){
-    return openDialog(settingsDialog);
+    openDialog(settingsDialog);
 }
 
 void openSearchDialog(){
@@ -1369,9 +1389,7 @@ void dataTabulate(tableId,tableData,tableColumns){
 		"bPaginate": false,
 		    "bAutoWidth": false
 		    });
-    
 }
-
 
 void createEditDialog(){
     var html="";
@@ -1402,7 +1420,7 @@ void createEditDialog(){
 			n.pre   = $('#noteText').val();
 			n.name  = "A note";
 			t.notes.push(n);
-			updateSelectionPanel(selectedSF);
+			updateSelectionPanel(selectedSN);
 			editDialog.dialog("close");
 		    }
 		}});
@@ -1416,6 +1434,7 @@ function notecount(track){
     }
     return 0;
 }
+
 
 void createSettingsDialog(){
     newTrackTable=true;
@@ -1433,11 +1452,10 @@ void createSettingsDialog(){
 			 { "sTitle": "id", "bVisible" : false, "width" : "0px" },
 			 { "width" : "100px", "sTitle": "Show?", "fnRender": function(cell) { return cb( cell.aData[1], { "id" : "cb"+cell.aData[0] }); } },
 			 { "width" : "100px", "sTitle": "Order" },
-			 { "width" : "200px", "sTitle": "Name" },
+{ "width" : "200px", "sTitle": "Name", "fnRender": function(cell) { return "<span onclick=\"HB.makeTrackNameEditable(event,'" + cell.aData[0] + "'," + cell.iDataRow + "," + cell.iDataColumn + ")\">" + cell.aData[3] + "</span>"; } },
 			 { "width" : "200px", "sTitle": "Type", "fnRender": function(cell) { return groupLink(cell.aData[0]);}},
 			 { "width" : "200px", "sTitle": "Notes" }
 			];
-
     settingsDialog = $('<div class="hb_misc"></div>')
 	.html(html)
 	.dialog({
@@ -1447,9 +1465,6 @@ void createSettingsDialog(){
 		width: 650,
 		buttons:
 		{
-		    "New Track" : function() {
-			alert("This doens't work yet");
-		    },
 		    "New Group" : function() {
 			var g = initTrack();
 			g.name = "New Group";
@@ -1473,12 +1488,12 @@ void createSettingsDialog(){
 }
 
 void checkUpdateSelection(level,tileType,tileNumber){
-    if ( selectedSF ) {
+    if ( selectedSN ) {
 	if ( tileType == "notes" ) {
 	    var tile = getSequenceRangeForTile(level,tileNumber);
-	    if ( overlaps(tile.start,tile.stop,selectedSF.start,selectedSF.stop) ) {
+	    if ( overlaps(tile.start,tile.stop,selectedSN.start,selectedSN.stop) ) {
 		//alert("UPDATING SELECTION: " + JSON.stringify(tile));
-		updateSelectionPanel(selectedSF);
+		updateSelectionPanel(selectedSN);
 		return;
 	    }
 	}
@@ -1517,153 +1532,132 @@ function getInspectableTrackIdSet(){
     return inspectableIdSet;
 }
 
+
+function getNotesBySN(ssn,inspectTracks,refTileRange){
+    var notesBySN={};
+    // bucket annotations by sn. Is this what is slow and blocks ui with lots of notes (like dante)?
+    for (int i=0; i < inspectTracks.length; i++ ) {
+	var t = inspectTracks[i];
+	var notes = [];
+	if ( t.pyramid ) {
+	    notes = getTiledNotes(t,refTileRange);
+	} else {
+	    notes = t.notes;
+	}
+	for (int ii=0; ii < notes.length; ii++ ) {
+	    var r = notes[ii];
+	    if (overlaps(ssn.start,ssn.stop,r.start,r.stop)){
+		for (int iii=0; iii < ssn.children.length; iii++ ) {
+		    // overlaps sn?
+		    var sn = ssn.children[iii];
+		    if (overlaps(sn.start,sn.stop,r.start,r.stop)){
+			if ( ! notesBySN[sn.id ] ) {
+			    notesBySN[sn.id] = new Array();
+			}
+			r.track = t;
+			notesBySN[sn.id].push(r);
+		    }
+		}
+	    }
+	}
+    }
+    return notesBySN;
+}
+
+
+function buildSelectionRows(ssn, notesBySN){
+    var rows = [];
+    var maxNoteCount=0;
+    var minNoteCount=Number.MAX_VALUE;
+    // or is this what's slow? break out methods and profile.
+    for (int i=0; i < ssn.children.length; i++ ) {
+	var sn = ssn.children[i];
+	var textString = sequence.data ? sequence.data.substr(sn.start,(sn.stop-sn.start+1)) : "Not sure what to show here instead of raw text."; 
+	var notes = notesBySN[sn.id];
+	if ( ! notes ) {
+	    notes = new Array();
+	}
+	String annotationString="<ul>";
+	for (int ii=0; ii < notes.length; ii++ ) {
+	    var morehypertext = "more";
+	    var r = notes[ii];
+	    if ( r.sloc ) {
+		morehypertext = r.sloc;
+	    }
+	    var morelink =  "";
+	    if (r.url) {
+		var base = "";
+		if ( r.track.base ) {
+		    base = r.track.base;
+		}
+		morelink = "[&nbsp;<a target='newtab' href='" + base + r.url + "'>" + morehypertext + "</a>&nbsp;]"; 
+	    }
+	    var img = "";
+	    // question: what do we want to allow here?
+	    // an image? a video url? arbitrary html?
+	    // 
+	    if ( r.img ) {
+		if (r.img.src) {
+		    img = "<img src=\"" +  r.img.src + "\" />";
+		    //alert("reinos: " + img);
+		}
+	    }
+	    annotationString += "<li>" + r.track.name + ": " + r.pre + " " + morelink + img +"</li>";
+	}
+	annotationString+="</li>";
+	var row = {};
+	row.sn=sn;
+	row.textString=textString;
+	row.noteCount = notes.length;
+	row.annotationString = annotationString;
+	if ( row.noteCount > maxNoteCount ) {
+	    maxNoteCount = row.noteCount;
+	}
+	if ( row.noteCount < minNoteCount ) {
+	    minNoteCount = row.noteCount;
+	}
+	rows.push(row);
+    }
+    return [rows,minNoteCount,maxNoteCount];
+}
+
 // the plan
-// find all sfs in ssf (selected sf)
-// find all annotations overlapping sf, bucket by loc. PROBLEM: loc range complicates.
-// create 2 panel div for each ssf text| annotations
-// eventually: add datatables style filter for annotations.
+// find all sns in ssn (selected sn)
+// find all annotations overlapping sn, bucket by loc. PROBLEM: loc range complicates.
+// create 2 panel div for each ssn text| annotations
 // this is a monster method. break up. isn't even core highbrow.
 
-
-void updateSelectionPanel(ssf){
-  selectedSF= ssf;
-  // if ssf is verse, then make it a child of itself just to keep the rest of the code below consistent.
-  if (! ssf.children) {
-      ssf.children = [ ssf ];
+void updateSelectionPanel(ssn){
+  selectedSN= ssn;
+  // if ssn is verse, then make it a child of itself just to keep the rest of the code below consistent.
+  if (! ssn.children) {
+      ssn.children = [ ssn ];
   }
-
-  var notesBySf = new Array();
-
-  // the tileRange for selected sequence range at close enough zoom to extract references.
-  var refTileRange = textRangeToTileRange(ssf.start,ssf.stop,levels[maxPreTiledLevel+1]);
-
-  var notesDebug="Notes Debug:\n";
-
   var inspectTracks = getInspectableTracks();
-
-  // bucket annotations by sf
-  for (int i=0; i < inspectTracks.length; i++ ) {
-    var t = inspectTracks[i];
-    var notes = [];
-    if ( t.pyramid ) {
-	notes = getTiledNotes(t,refTileRange);
-    } else {
-	notes = t.notes;
-    }
-    //alert("notes: " + notes.length);
-    notesDebug += t.id + ":" + notes.length + "\n";
-    for (int ii=0; ii < notes.length; ii++ ) {
-      var r = notes[ii];
-      // overlaps ssf?
-      if (overlaps(ssf.start,ssf.stop,r.start,r.stop)){
-	  //alert("ssf overlap! kids: " +ssf.children.length);
-	  for (int iii=0; iii < ssf.children.length; iii++ ) {
-	      // overlaps sf?
-	      var sf = ssf.children[iii];
-	      if (overlaps(sf.start,sf.stop,r.start,r.stop)){
-		  if ( ! notesBySf[sf.id ] ) {
-		      notesBySf[sf.id] = new Array();
-		  }
-		  r.track = t;
-		  notesBySf[sf.id].push(r);
-		  notesDebug += sf.id + " <- " + r.id + "\n";
-		  //alert("sf overlap: " +JSON.stringify(notesBySf) + JSON.stringify(r));
-	      }
-	  }
-      }
-    }
-  }
-  //textRangeToTileRange(ssf.start,ssf.stop)
-
-  var tileRange = textRangeToTileRange(ssf.start,ssf.stop);
-
-  String tileRangeString = JSON.stringify(tileRange,null, "  " );
-  String refTileRangeString = JSON.stringify(refTileRange,null, "  "); 
-
+  // the tileRange for selected sequence range at close enough zoom to extract notes.
+  var refTileRange = textRangeToTileRange(ssn.start,ssn.stop,levels[maxPreTiledLevel+1]);
+  var notesBySN = getNotesBySN(ssn,inspectTracks,refTileRange);
+  var tileRange = textRangeToTileRange(ssn.start,ssn.stop);
   String canvasString = charPerPx()+"";
-
-  //String tileCacheString = prettyCacheString(tileCache);
-  //String requestCacheString = prettyCacheString(requestCache);
-  //  String debugString= "<pre>Text Length: " + getTextLength() + "\n\n Drawing Resolution: " + canvasString + "\n\nTileRange: " + tileRangeString +  "\n\nRequestCache: " + requestCacheString + "\n\nTileCache:" + tileCacheString + "</pre>";
-
-  String debugString = "";//"<pre>" + " Text Length: " + getTextLength() + "\n\nDrawing Resolution: " + canvasString + "\n\nDrawn Sel. TileRange: " + tileRangeString + "\n\nRef. Sel. TileRange: " + refTileRangeString +"</pre>";
-
-  //debugString = "<pre>" + JSON.stringify(tracks[3],null, "  ") + "</pre>";
-
-  String selectionString=debugString;
-
-  selectionString += "<p class=\"hbl\"><table><tr><th id=\"seqcol\">" + ssf.id + "</th><th>Notes</th></tr>";
-  var helpme = "";
+  var selectionString = "<p class=\"hbl\"><table><tr><th id=\"seqcol\">" + ssn.id + "</th><th>Notes</th></tr>";
   if ( $("#hbv").length > 0 ) {
-      document.getElementById("hbv").currentTime=ssf.start;
+      document.getElementById("hbv").currentTime=ssn.start;
   }
-
-  var reinos="Reinos:" + helpme;
-
-  var rows = [];
-  var maxRefCount=0;
-  var minRefCount=Number.MAX_VALUE;
-
-  for (int i=0; i < ssf.children.length; i++ ) {
-      var sf = ssf.children[i];
-      var textString = sequence.data ? sequence.data.substr(sf.start,(sf.stop-sf.start+1)) : "Not sure what to show here instead of raw text."+reinos; 
-      var notes = notesBySf[sf.id];
-      if ( ! notes ) {
-	  notes = new Array();
-      }
-      String annotationString="<ul>";
-      for (int ii=0; ii < notes.length; ii++ ) {
-	  var morehypertext = "more";
-	  var r = notes[ii];
-	  if ( r.sloc ) {
-	      morehypertext = r.sloc;
-	  }
-	  var morelink =  "";
-	  if (r.url) {
-	      var base = "";
-	      if ( t.base ) {
-		  base = t.base;
-	      }
-	      morelink = "[&nbsp;<a target='newtab' href='" + base + r.url + "'>" + morehypertext + "</a>&nbsp;]"; 
-	  }
-	  var img = "";
-	  // question: what do we want to allow here?
-	  // an image? a video url? arbitrary html?
-	  // 
-	  if ( r.img ) {
-	      if (r.img.src) {
-		  img = "<img src=\"" +  r.img.src + "\" />";
-		  //alert("reinos: " + img);
-	      }
-	  }
-	  annotationString += "<li>" + r.track.name + ": " + r.pre + " " + morelink + img +"</li>";
-      }
-
-      annotationString+="</li>";
-      var row = {};
-      row.sf=sf;
-      row.textString=textString;
-      row.refCount = notes.length;
-      row.annotationString = annotationString;
-      if ( row.refCount > maxRefCount ) {
-	  maxRefCount = row.refCount;
-      }
-      if ( row.refCount < minRefCount ) {
-	  minRefCount = row.refCount;
-      }
-      rows.push(row);
-  }
-
+  var rows, minNoteCount, maxNoteCount;
+  var mv = buildSelectionRows(ssn,notesBySN);
+  rows = mv[0];
+  minNoteCount = mv[1];
+  maxNoteCount = mv[2];
   for (int i=0; i < rows.length(); i++ ) {
       var row = rows[i];
-      var opacity = maxRefCount > 0 ? (row.refCount+0.0-minRefCount) / (maxRefCount-minRefCount) : 0;
+      var opacity = maxNoteCount > 0 ? (row.noteCount+0.0-minNoteCount) / (maxNoteCount-minNoteCount) : 0;
       if ( opacity < .20 ) {
 	  opacity = .20;
       }
-      if ( row.refCount === 0 ) {
+      if ( row.noteCount === 0 ) {
 	  opacity = 0;
       }
-      selectionString += "<tr class=\"ssf\"><td class=\"ssft hbw2\"><span onmousedown=\"HB.setEditStart(" + row.sf.start + ");\" onmouseup=\"HB.setEditStopAndOpen(" + row.sf.start + ")\">" + row.textString + "</span></td><td class=\"hbw2\"><div class=\"accordion\"><div style=\"opacity: " + opacity + ";\" class=\"exp\">" + row.refCount + "</div><div>" + row.annotationString + "</div></td></tr>";
+      selectionString += "<tr class=\"ssn\"><td class=\"ssnt hbw2\"><span onmousedown=\"HB.setEditStart(" + row.sn.start + ");\" onmouseup=\"HB.setEditStopAndOpen(" + row.sn.start + ")\">" + row.textString + "</span></td><td class=\"hbw2\"><div class=\"accordion\"><div style=\"opacity: " + opacity + ";\" class=\"exp\">" + row.noteCount + "</div><div>" + row.annotationString + "</div></td></tr>";
   }
 
   selectionString += "</table></p>";
