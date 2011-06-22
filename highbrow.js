@@ -1564,7 +1564,6 @@ function getNotesBySN(ssn,inspectTracks,refTileRange){
     return notesBySN;
 }
 
-
 function buildSelectionRows(ssn, notesBySN){
     var rows = [];
     var maxNoteCount=0;
@@ -1580,29 +1579,29 @@ function buildSelectionRows(ssn, notesBySN){
 	String annotationString="<ul>";
 	for (int ii=0; ii < notes.length; ii++ ) {
 	    var morehypertext = "more";
-	    var r = notes[ii];
-	    if ( r.sloc ) {
-		morehypertext = r.sloc;
+	    var n = notes[ii];
+	    if ( n.sloc ) {
+		morehypertext = n.sloc;
 	    }
 	    var morelink =  "";
-	    if (r.url) {
+	    if (n.url) {
 		var base = "";
-		if ( r.track.base ) {
-		    base = r.track.base;
+		if ( n.track.base ) {
+		    base = n.track.base;
 		}
-		morelink = "[&nbsp;<a target='newtab' href='" + base + r.url + "'>" + morehypertext + "</a>&nbsp;]"; 
+		morelink = "[&nbsp;<a target='newtab' href='" + base + n.url + "'>" + morehypertext + "</a>&nbsp;]"; 
 	    }
 	    var img = "";
 	    // question: what do we want to allow here?
 	    // an image? a video url? arbitrary html?
 	    // 
-	    if ( r.img ) {
-		if (r.img.src) {
-		    img = "<img src=\"" +  r.img.src + "\" />";
+	    if ( n.img ) {
+		if (n.img.src) {
+		    img = "<img src=\"" +  n.img.src + "\" />";
 		    //alert("reinos: " + img);
 		}
 	    }
-	    annotationString += "<li>" + r.track.name + ": " + r.pre + " " + morelink + img +"</li>";
+	    annotationString += "<li>" + n.track.name + ": " + n.pre + " " + morelink + img +"</li>";
 	}
 	annotationString+="</li>";
 	var row = {};
