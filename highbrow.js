@@ -21,6 +21,9 @@ $(document).ready(function() {
 	    });
     });
 
+var ckeditorCreated = false;
+var pleaseCreateCkeditor= false;
+
 var minCharPerPx = .01; /// minimum characters per pixel. make configurable at some point.
 
 var editNoteDialog;
@@ -36,6 +39,9 @@ var groupEditTableColumns=[];
 
 var editStart=0;
 var editStop=0;
+
+var allTracks=[];
+var editableTracks=[];
 
 // very crude. but hopefully good enough for now.
 function stretchInts(oldInts, newSize) {
@@ -414,7 +420,7 @@ void initTracks(tracks){
     }
     allTracks = tracks;
     filterTracks();
-    createEditDialog();
+    //createEditDialog();
     createSettingsDialog();
     createSearchDialog();
     createGroupEditDialog();
@@ -422,12 +428,17 @@ void initTracks(tracks){
 
 void filterTracks(){
     tracks = [ allTracks[0] ];
+    editableTracks = [];
     for (int i=1; i < allTracks.length(); i++ ) {
 	var t = allTracks[i];
 	if ( t.visible ){
 	    tracks.push(t);
 	    t.order = tracks.length-1;
+	    if ( t.editable ) {
+		editableTracks.push(t);
+	    }
 	}
+	
     }
 }
 
@@ -1264,8 +1275,12 @@ void openDialog(d){
 }
 
 void openEditDialog(){
-    createEditDialog();
-    return openDialog(editDialog);
+    if ( editableTracks.length > 0 ) {
+	prepEditDialog();
+	return openDialog(editDialog);
+    } else {
+	return false;
+    }
 }
 
 void openSettingsDialog(){
@@ -1391,18 +1406,28 @@ void dataTabulate(tableId,tableData,tableColumns){
 		    });
 }
 
+void prepEditDialog(){
+    if ( $("#HB_editForm").length == 0 ) {
+	createEditDialog();
+    }
+    updateEditDialog();
+}
+
+void updateEditDialog(){
+    // fill in note edit fields with current note values (or clear).
+    $("#HB_editLoc").html(editStart + " to " + editStop);
+    $("#HB_editText").html( sequence.data.substr(editStart,(editStop-editStart)+1));
+    $("#HB_editNoteText").val( "" );
+}
+
 void createEditDialog(){
     var html="";
-
-    $("#editForm").remove();
-
-    html+= "<form id=\"editForm\" name=\"editForm\"><table>";
-    html+="<tr><th>Location</th><td>" + editStart + " to " + editStop + "</td></tr>";
-    html+="<tr><th>Text</th><td><span>"+ sequence.data.substr(editStart,(editStop-editStart)+1) + "</span></td></tr>";
-    html+="<tr><th>Note</th><td><span><textarea rows=\"8\" cols=\"40\" name=\"noteText\" id=\"noteText\">Type your note here." +"</textarea></span></td></tr>";
+    html+= "<form id=\"HB_editForm\"><table>";
+    html+="<tr><th>Location</th><td><span id=\"HB_editLoc\"></span></td></tr>";
+    html+="<tr><th>Text</th><td><span id=\"HB_editText\">" + "</span></td></tr>";
+    html+="<tr><th>Note</th><td><span><textarea class=\"jquery_ckeditor\" cols=\"80\" rows=\"10\" id=\"HB_editNoteText\" placeholder=\"Type your note here\">"+"</textarea></span></td></tr>";
     html+= "</table></form>";
-
-    editDialog = $('<div class="hb_misc"></div>')
+    editDialog = $('<div class="HB_misc"></div>')
 	.html(html)
 	.dialog({
 		autoOpen: false,
@@ -1412,18 +1437,25 @@ void createEditDialog(){
 		buttons:
 		{
 		    "Save" : function() {
-			var t = tracks[2];
+			var t = editableTracks[0];
 			var n = { };
 			n.start = editStart;
 			n.stop  = editStop;
 			n.id    = t.notes.length+1;
-			n.pre   = $('#noteText').val();
+			n.pre   = $('#HB_editNoteText').val();
 			n.name  = "A note";
 			t.notes.push(n);
 			updateSelectionPanel(selectedSN);
 			editDialog.dialog("close");
 		    }
 		}});
+	alert("creating ckeditor!");
+	var config = { toolbar: [ 
+				 ['Bold', 'Italic', '-', 'NumberedList', 'BulletedList', '-', 'Link', 'Unlink', 'Image', 'Youtube'], 
+				 ['UIColor']
+				  ]
+	};
+	$('.jquery_ckeditor').ckeditor(config);
 }
 
 function notecount(track){
