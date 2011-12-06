@@ -92,14 +92,19 @@ var Highbrow = this.Highbrow = function(conf) {
 	var fragment = $.deparam.fragment();
 	var sid = fragment['select'] ? fragment['select'] : "";
 	var zid = fragment['zoom']   ? fragment['zoom'] : ""; // could be multiple.
+	var spa = fragment['start'] ? fragment['start'] : "";
+	var spz = fragment['stop'] ? fragment['stop'] : "";
 	// noteSection ?
 	if ( sid ) {
 	    var s = hb.sectionById[sid];
 	    hb.selectSection(s);
 	}
 	if ( zid ) {
+	    // if zoom id is set, it overrides start and stop.
 	    var z = hb.sectionById[zid];
 	    hb.map.setVisibleRange(z.start,z.stop);
+	} else if ( spa && spz ) {
+	    hb.map.setVisibleRange(spa,spz);
 	}
     };
     
