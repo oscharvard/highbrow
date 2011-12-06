@@ -1,88 +1,41 @@
-.title {
-  font: 16px baskerville;
-  text-transform: uppercase;
-  text-align: center;
-}
-
-.nav {
-  text-align: center;
-}
-
-.exp {
-     color: blue;
-     text-align: center;
-}
-
-#settings {
-  text-align:right;
-  float: right;  
-}
-
-.HB_misc {
-  font: 13px baskerville;
-}
-
-#search, #settings, .nav {
-  font: 12px baskerville;
-  text-transform: uppercase;
-}
-
 body {
-  font: 13px baskerville;
-  overflow: hidden;
-}
-
-#plotPanel {
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding: 3px;
-  width:100%;
-  height:2px;
-}
-
-#selectionPanel {
-  overflow: auto;
-}
-
-#trackTableDiv {
-  height: 400px;
-  width: 600px;	    
-}
-
-.ssn {
-     font: 12px baskerville;
-     vertical-align:text-top;
-}
-
-.ssnt {
-      vertical-align: text-center;
-}
-
-.hbr {
-     float: right;
-}
-
-.hbl {
-     float: left;
+     background: white;
+     font: 11px baskerville;
+     overflow: hidden;
 }
 
 a {
   text-decoration:none;
  } 
 
-.accordion a{
-  color: blue;
-}
-
-th {
- font: 15px baskerville;
+#HB_header {
+  font: 16px baskerville;
   text-transform: uppercase;
- font-weight: normal;
 }
 
-.fancy {
-  font: 13px baskerville;
+.HB_nav, #HB_searchBox, #HB_settingsBox {
+  font: 11px baskerville;
+  text-transform: uppercase;
+}
+
+.HB_nav, #HB_header {
   text-align: center;
+}
+
+#HB_searchBox {
+  text-align: left;
+} 
+
+#HB_settingsBox {
+  text-align: right;
+}
+
+.HB_w {
+
+}
+
+.HB_note {
+	border: 1px solid #ddd;	
 }
 
 // Datatables stuff.
