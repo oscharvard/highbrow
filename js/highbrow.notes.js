@@ -7,10 +7,10 @@ var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
 
     nPanel.showSpNotes = function(sp) {
 	//$(nPanel.element).html("Will show notes at sp: " + sp);
-	var html = "";
+	var html = "<ul>";
 	var notes = hb.getNotes(hb.getInspectableTracks(),{ start: sp, stop: sp });
 	$.each(notes, function(index, n) {
-		html += '<div class="HB_note">';
+		html += '<li>';
 		var morehypertext="";
 		if ( n.sloc ) {
 		    morehypertext = n.sloc;
@@ -31,8 +31,9 @@ var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
 		    visEditNotes.push(n);
 		}
 		html += n.track.name + ": " + title + content + " " + morelink + editLink;
-		html += "</div>";
+		html += "</li>";
 	    });
+	html += "</ul>";
 	if ( notes.length === 0 ) {
 	    html = "No overlapping notes.";
 	}
