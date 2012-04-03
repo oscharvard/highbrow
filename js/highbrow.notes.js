@@ -9,6 +9,8 @@ var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
 	//$(nPanel.element).html("Will show notes at sp: " + sp);
 	var html = "<ul>";
 	var notes = hb.getNotes(hb.getInspectableTracks(),{ start: sp, stop: sp });
+	var spa = sp;
+	var spz = sp;
 	$.each(notes, function(index, n) {
 		html += '<li>';
 		var morehypertext="";
@@ -29,15 +31,19 @@ var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
 		if ( n.track.editable ) {
 		    editLink = '<div>[ <a href="" onclick="HB.editNote(' + visEditNotes.length + '); return false;">edit</a> | <a href="" onclick="HB.deleteNote(' + visEditNotes.length + '); return false;">delete</a> ]</div>';
 		    visEditNotes.push(n);
+
 		}
 		html += n.track.name + ": " + title + content + " " + morelink + editLink;
 		html += "</li>";
+		spa = spa < n.start ? spa : n.start;
+		spz = spz > n.stop ?  spz : n.stop;
 	    });
 	html += "</ul>";
 	if ( notes.length === 0 ) {
 	    html = "No overlapping notes.";
 	}
 	$(nPanel.element).html(html);
+	return { start: spa, stop: spz };
     };
 
 };

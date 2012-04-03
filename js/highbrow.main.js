@@ -48,6 +48,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	conf.groups = conf.groups ? conf.groups : [];
 	conf.minCharPerPx = conf.minCharPerPx ? conf.minCharPerPx : .01; 
 	conf.defaultTrackSize = conf.defaultTrackSize ? conf.defaultTrackSize : 20;
+	conf.noteMarkMode = conf.noteMarkMode ? conf.noteMarkMode : "narrow";
     };
 
     hb.init = function() {
@@ -57,6 +58,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.RED  = [206,15,37];
 	hb.GOLD = [207,181,59]; //[245,217,77];
 	hb.BLUE = [19,83,180];
+	hb.noteMarkMode = conf.noteMarkMode;
 	hb.initSequence(conf.sequence);
 	hb.map = new HighbrowMap(hb,conf);	
 	hb.map.initProcessing()
@@ -254,6 +256,13 @@ var Highbrow = this.Highbrow = function(conf) {
 
     hb.overlaps = function(a,z,aa,zz){
 	if (a <= zz && z >= aa) {
+	    return true;
+	}
+	return false;
+    };
+
+    hb.contains = function(a,z,aa,zz){
+	if (a <= aa && z >= zz) {
 	    return true;
 	}
 	return false;

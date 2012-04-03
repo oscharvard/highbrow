@@ -36,13 +36,13 @@ var HighbrowSelectionPanel = this.HighbrowSelectionPanel = function(hb,conf) {
 		sPanel.markSelectedSpzOffset(offset);
 		sPanel.applySelectedRange();
 		if ( sPanel.selectedSpa === sPanel.selectedSpz ) {
-		    sPanel.markSpNotes(sPanel.selectedSpa);
+		    sPanel.showSpNotes(sPanel.selectedSpa);
 		} else if ( sPanel.selectedSpa > -1 && sPanel.selectedSpz > -1 ) {
 		    hb.editRange(sPanel.selectedSpa,sPanel.selectedSpz);		
 		} else {
 		    var sp = sPanel.selectedSpa > -1 ? sPanel.selectedSpa : sPanel.selectedSpz;
 		    if ( sp > -1 ) {
-			sPanel.markSpNotes(sp);
+			sPanel.showSpNotes(sp);
 		    } else {
 			alert("Highbrow couldn't figure out which region you selected: " + sPanel.selectedSpa + "-" + sPanel.selectedSpz + "\n\nTry again?");
 		    }
@@ -61,17 +61,34 @@ var HighbrowSelectionPanel = this.HighbrowSelectionPanel = function(hb,conf) {
 	    });	
     };
 
-    sPanel.markSpNotes = function(sp){
-	hb.nPanel.showSpNotes(sp);
-	// give visual indication of annotated regions overlapping click point in text.
+    sPanel.showSpNotes = function(sp){
+	var rangeOfAllOverlappingNotes = hb.nPanel.showSpNotes(sp);
+	sPanel.markNotesContainedInRange({start:sp, stop:sp},rangeOfAllOverlappingNotes);
+    };
+
+    sPanel.markNotesContainedInRange = function(r,R){
+	// annoying. text-decoration-style only works in firefox.  the
+	// idea was to show the narrowest and widest regions
+	// simultaneously.  not sure how to do that in a non-retarded
+	// way otherwise.  rethink. I'd like to also have mouseover in
+	// the notes panel inicate the annotated region somehow here.
+	// another issue to keep in mind is it's nice to show the empty chunk if there's nothing.
+	// question: should this be a configuration issue? specify whether selection is by sf or by all overlaps.
+	// might be a lot more intuitive for end users than this weird shit.
 	$("#"+sPanel.element.id + " span").each(function(){
 		var chunk = $(this);
-		var spa = chunk.attr("data-spa");
-		var spz = chunk.attr("data-spz");
-		if ( hb.overlaps(sp,sp, spa,spz) ) {
-		    chunk.css("border", "1px solid blue");
+		var chunkSpa = chunk.attr("data-spa");
+		var chunkSpz = chunk.attr("data-spz");
+		if ( hb.overlaps(r.start,r.stop, chunkSpa,chunkSpz) ) {
+		    chunk.css("text-decoration","underline");
+		    chunk.css("text-decoration-style","solid");
+		    //chunk.css("border-bottom", "1px solid blue");
+		} else if ( hb.noteMarkMode === "expansive" && hb.contains(R.start,R.stop,chunkSpa,chunkSpz ) ) {
+		    chunk.css("text-decoration","underline");
+		    chunk.css("text-decoration-style","dotted");
 		} else {
-		    chunk.css("border", "");
+		    //chunk.css("border-bottom", "");
+		    chunk.css("text-decoration","none");
 		}
 	    });
     };
@@ -121,10 +138,12 @@ var HighbrowSelectionPanel = this.HighbrowSelectionPanel = function(hb,conf) {
 
     sPanel.update = function(section,inspectTracks){
 	// todo: problem: this breaks down in several situations.
-	// 1. more than 3 levels of sections
+	// 1. more than 3 levels of sections (actually, I think this is fixed now)
 	// 2. if sections are non contiguous -- what about the gaps?
 	var sectionNotes = {};
-	var subSections  = section.children ? section.children : [ section ];
+	//var subSections  = section.children ? section.children : [ section ];
+	var subSections = sPanel.fillGaps(section,sPanel.getFinestGrainSubsections(section,[]));
+	//alert("Hiya, Rein. Got these subsections: " + hb.dump(subSections) + " for this section: " + hb.dump(section));
 	var sectionNotes = sPanel.buildSectionNotesMap(section,subSections,inspectTracks);	
 	var rows = sPanel.buildSelectionRows(subSections,sectionNotes )[0];
 	var html = "";
@@ -136,6 +155,28 @@ var HighbrowSelectionPanel = this.HighbrowSelectionPanel = function(hb,conf) {
 	sPanel.updateHeader(section);
 	$("#"+sPanel.element.id + " div").css("marginBottom","1px");
 	$("#"+sPanel.element.id + " div").css("marginTop","1px");
+    };
+
+
+    sPanel.fillGaps = function(range,subsections) {
+	// just pads on the front for now.
+	// internal gaps and stop are ignored.
+	// note that overlapping structural features will destroy stuff. It's a deep assumption that structural features on the same level do not overlap.
+	if ( subsections[0].start > range.start ) {
+	    subsections.unshift({ "start": range.start, "stop": subsections[0].stop-1 });
+	}
+	return subsections;
+    };
+
+    sPanel.getFinestGrainSubsections = function(section,subsections) {
+	if ( section.children && section.children.length > 0) {
+	    for (var i=0; i < section.children.length; i++ ) {
+		sPanel.getFinestGrainSubsections(section.children[i],subsections);
+	    }
+	} else {
+	    subsections.push(section);
+	}
+	return subsections;
     };
 
     sPanel.updateHeader = function(section){
@@ -188,7 +229,7 @@ var HighbrowSelectionPanel = this.HighbrowSelectionPanel = function(hb,conf) {
 	// hb.getRawSequence(sn.start,hb.len(sn))
 	for (var i=0; i < sections.length; i++ ) {
 	    var sn = sections[i];
-	    var textString = hb.sequence.data ?  sequence.data.substr(sn.start,hb.len(sn)) : "Not sure what to show here instead of raw text."; 
+	    var textString = hb.sequence.data ?  sequence.data.substr(sn.start-1,hb.len(sn)) : "Not sure what to show here instead of raw text."; 
 	    var heatmap = [];
 	    var notes = sectionNotes[sn.id];
 	    if ( ! notes ) {

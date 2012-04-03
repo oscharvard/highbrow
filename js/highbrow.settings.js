@@ -134,7 +134,7 @@ var HighbrowSettingsDialog = this.HighbrowSettingsDialog = function(hb,conf) {
 			    debug+="t.id: " + t.id + " visible? " + t.visible;
 			    debug+="\n";
 			}
-			alert("Debug: " + debug);
+			//alert("Debug: " + debug);
 			hb.filterTracks();
 			hb.adjustBounds();
 		    }

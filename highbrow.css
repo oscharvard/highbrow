@@ -30,6 +30,10 @@ a {
   text-align: right;
 }
 
+#HB_sectionPanel span {
+  //padding-bottom: 1px;
+}
+
 .HB_w {
 
 }
