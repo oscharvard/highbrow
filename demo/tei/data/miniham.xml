@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title type="statement">The tragedy of Hamlet Prince of Denmarke: an electronic edition.</title>
+                <author key="LCCNn78095332">Shakespeare, William, 1564-1616.</author>
+            </titleStmt>      
+        </fileDesc>
+    </teiHeader>
+<text>
+<front>
+<titlePage>
+ <pb facs="#ham-1603-22275x-hun-c01-image004" xml:id="ham-1603-22275x-hun-c01-004b"/>
+<docTitle><titlePart type="main">THE
+<lb/>Tragicall Historie of
+<lb/><name type="character" ref="#ham">HAMLET</name>
+<lb/><hi rend="italic">Prince of Denmarke</hi></titlePart></docTitle>
+<byline>By <docAuthor>William Shake&#x2010;speare</docAuthor>.</byline>
+<docEdition>As it hath beene diuerse times acted by his Highnesse ser&#x00AD;
+<lb/>uants in the Cittie of London: as also in the two V&#x00AD;
+<lb/>niuersities of Cambridge and Oxford, and else&#x2010;where</docEdition>
+    <figure><figDesc>Printer&#x0027;s mark incorporating the initials &#x201C;N L&#x201D;.</figDesc></figure>
+<docImprint>At London printed for N.L. and Iohn Trundell.
+<lb/><docDate>1603</docDate>.<add place="margin-bot" type="bibliographic" hand="#ac"
+    resp="#fol">27</add>
+    <add place="mount-bot" type="bibliographic" hand="#ad" resp="#fol">cat  8 Jun &#x0027;17 B</add>
+    <add place="mount-bot" type="bibliographic" hand="#ae" resp="#fol">ex K-B 472</add></docImprint>
+</titlePage>
+</front>
+<body>
+    <div1 type="act" n="1">
+        <div2 type="scene" n="1">
+             <pb facs="#ham-1603-22275x-hun-c01-image005" xml:id="ham-1603-22275x-hun-c01-005a"/>
+ <pb facs="#ham-1603-22275x-hun-c01-image005" xml:id="ham-1603-22275x-hun-c01-005b"/>
+            <milestone unit="unspecified" rend="decorativeBorder"/>
+            <head>The Tragicall Historie of
+<lb/><name type="character" ref="#ham">HAMLET</name>
+<lb/>Prince of Denmarke.</head>
+<stage rend="italic, centred" type="entrance">Enter two Centinels.</stage>
+            <sp who="#sen"><speaker>1.</speaker> <l><c rend="droppedCapital">S</c>Tand: who is that?</l></sp>
+<sp who="#bar"><speaker>2.</speaker> <l>Tis I.</l></sp>
+    <sp who="#sen"><speaker>1.</speaker> <l>O you come most carefully vpon your watch,</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>And if you meete <name type="character" ref="#mar" rend="italic">Marcellus</name> and <name type="character" ref="#hor" rend="italic">Horatio</name>,</l>
+<l>The partners of my watch, bid them make haste.</l></sp>
+    <sp who="#sen"><speaker>1.</speaker> <l>I will: See who goes there.</l></sp>
+<stage rend="italic, centred" type="entrance">Enter <name type="character" ref="#hor">Horatio</name> and <name type="character" ref="#mar">Marcellus</name>.</stage>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Friends to this ground.</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>And leegemen to the Dane,</l>
+<l>O farewell honest souldier, who hath releeued you?</l></sp>
+    <sp who="#sen"><speaker>1.</speaker> <l><name type="character" ref="#bar" rend="italic">Barnardo</name> hath my place, giue you good night.</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>Holla, <name type="character" ref="#bar" rend="italic">Barnardo</name>.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>Say, is <name type="character" ref="#hor" rend="italic">Horatio</name> there?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>A peece of him.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>Welcome <name type="character" ref="#hor" rend="italic">Horatio</name>, welcome good <name type="character" ref="#mar" rend="italic">Marcellus</name>.</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>What hath this thing appear&#x0027;d againe to night.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>I haue seene nothing.</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l><name type="character" ref="#hor" rend="italic">Horatio</name> sayes tis but our fantasie,</l>
+<l>And wil not let beliefe take hold of him,</l>
+    <l>Touching this dreaded sight twice seene by vs,<add place="margin-bot" type="bibliographic" hand="#ac" resp="#fol">28</add></l>
+<fw type="signature" place="foot-centre">B</fw><fw type="catchword" place="foot-right">There&#x00AD;</fw>
+ <pb facs="#ham-1603-22275x-hun-c01-image006" xml:id="ham-1603-22275x-hun-c01-006a"/>
+<fw type="runningHeader" place="top-centre"><gap reason="absent" agent="cropped" extent="4" unit="words" resp="#fol"/></fw>
+<l>Therefore I haue intreated him along with vs</l>
+<l>To watch the minutes of this night,</l>
+<l>That if againe this apparition come,</l>
+<l>He may approoue our eyes, and speake to it.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Tut, t&#x0027;will not appeare.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>Sit downe I pray, and let vs once againe</l>
+<l>Assaile your eares that are so fortified,</l>
+<l>What we haue two nights seene.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Wel, sit we downe, and let vs heare <name type="character" ref="#bar" rend="italic">Bernardo</name> speake
+<lb/>of this.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>Last night of al, when yonder starre that&#x0027;s west&#x00AD;
+<lb/>ward from the pole, had made his course to</l>
+<l>Illumine that part of heauen. Where now it burnes,</l>
+<l>The bell then towling one.</l></sp>
+<stage rend="italic, centred" type="entrance">Enter Ghost.</stage>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>Breake off your talke, see where it comes againe.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>In the same figure like the King that&#x0027;s dead,</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>Thou art a scholler, speake to it <name type="character" ref="#hor" rend="italic">Horatio</name>.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>Lookes it not like the king?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Most like, it horrors mee with feare and wonder.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>It would be spoke to.</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>Question it <name type="character" ref="#hor" rend="italic">Horatio</name>.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>What art thou that thus vsurps the state, in</l>
+<l>Which the Maiestie of buried <hi rend="italic">Denmarke</hi> did sometimes</l>
+<l>Walke? By heauen I charge thee speake.</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>It is offended.<stage rend="italic, inline" type="exit">exit Ghost.</stage></l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>See, it stalkes away.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Stay, speake, speake, by heauen I charge thee
+<lb/>speake.</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>Tis gone and makes no answer.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>How now <name type="character" ref="#hor" rend="italic">Horatio</name>, you tremble and looke pale,</l>
+<l>Is not this something more than fantasie?</l>
+<l>What thinke you on&#x0027;t?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Afore my God, I might not this beleeue, without
+<lb/>the sensible and true auouch of my owne eyes.</l></sp>
+<fw type="catchword" place="foot-right" rend="italic">Mar.</fw>
+ <pb facs="#ham-1603-22275x-hun-c01-image006" xml:id="ham-1603-22275x-hun-c01-006b"/>
+<fw type="runningHeader" place="top-centre" rend="italic"><add place="mount-top" hand="#af" type="figure" resp="#fol"><figure><figDesc>Line.</figDesc></figure></add>Prince of Denmarke.</fw>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>Is it not like the King?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>As thou art to thy selfe,</l>
+<l>Such was the very armor he had on,</l>
+<l>When he the ambitious <name type="character" ref="#nor" rend="italic">Norway</name> combated.</l>
+<l>So frownd he once, when in an angry parle</l>
+<l>He smot the sleaded pollax on the yce,</l>
+<l>Tis strange.</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>Thus twice before, and iump at this dead hower,</l>
+<l>With Marshall stalke he passed through our watch.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>In what particular to worke, I know not,</l>
+<l>But in the thought and scope of my opinion,</l>
+<l>This bodes some strange eruption to the state.</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>Good, now sit downe, and tell me he that knowes</l>
+<l>Why this same strikt and most obseruant watch,</l>
+<l>So nightly toyles the subiect of the land,</l>
+<l><add place="mount-left" hand="#af" type="figure" resp="#fol"><figure><figDesc>Stroke.</figDesc></figure></add>And why such dayly cost of brazen Cannon</l>
+<l>And forraine marte, for implements of warre,<add place="mount-right" hand="#af" type="figure" resp="#fol"><figure><figDesc>Stroke.</figDesc></figure></add></l>
+<l>Why such impresse of ship&#x2010;writes, whose sore taske</l>
+<l>Does not diuide the sunday from the weeke:</l>
+<l>What might be toward that this sweaty march</l>
+<l>Doth make the night ioynt labourer with the day,</l>
+<l>Who is&#x0027;t that can informe me?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Mary that can I, at least the whisper goes so,</l>
+<l>Our late King, who as you know was by <name type="character" ref="#ofo">Forten&#x00AD;
+<lb/>Brasse</name> of <hi rend="italic">Norway</hi>,</l>
+<l>Thereto prickt on by a most emulous cause, dared to</l>
+<l>The combate, in which our valiant <name type="character" ref="#oha" rend="italic">Hamlet</name>,</l>
+<l>For so this side of our knowne world esteemed him,</l>
+<l>Did slay this <name type="character" ref="#ofo">Fortenbrasse</name>,</l>
+<l>Who by a seale compact well ratified, by law</l>
+<l>And heraldrie, did forfeit with his life all those</l>
+<l>His lands which he stoode seazed of by the conqueror,</l>
+<l>Against the which a moity competent,</l>
+<l>Was gaged by our King:</l>
+<l>Now sir, yong <name type="character" ref="#for">Fortenbrasse</name>,</l>
+    <l>Of inapproued mettle hot and full,<add place="margin-bot" type="bibliographic" hand="#ac" resp="#fol">29</add><add place="mount-bot" hand="#af" type="figure" resp="#fol"><figure><figDesc>Line.</figDesc></figure></add></l>
+<fw type="signature" place="foot-centre">B2</fw><fw type="catchword" place="foot-right">Hath</fw>
+ <pb facs="#ham-1603-22275x-hun-c01-image007" xml:id="ham-1603-22275x-hun-c01-007a"/>
+    <fw type="runningHeader" place="top-centre"><gap reason="absent" agent="cropped" extent="4" unit="words" resp="#fol"/></fw>
+<l>Hath in the skirts of <hi rend="italic">Norway</hi> here and there,</l>
+<l>Sharkt vp a sight of lawlesse Resolutes</l>
+<l>For food and diet to some enterprise,</l>
+<l>That hath a stomacke in&#x0027;t: and this (I take it) is the</l>
+<l>Chiefe head and ground of this our watch.</l>
+<stage rend="italic, centred" type="entrance">Enter the Ghost.</stage>
+<l>But loe, behold, see where it comes againe,</l>
+<l>Ile crosse it, though it blast me: stay illusion,</l>
+<l>If there be any good thing to be done,</l>
+<l>That may doe ease to thee, and grace to mee,</l>
+<l>Speake to mee.</l>
+<l>If thou art priuy to thy countries fate,</l>
+<l>Which happly foreknowing may preuent, O speake to me,</l>
+<l>Or if thou hast extorted in thy life,</l>
+<l>Or hoorded treasure in the wombe of earth,</l>
+<l>For which they say you Spirites oft walke in death, speake
+<lb/>to me, stay and speake, speake, stoppe it <name type="character" ref="#mar" rend="italic">Marcellus</name>.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>Tis heere.<stage rend="italic, inline" type="exit">exit Ghost.</stage></l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Tis heere.</l></sp>
+<sp who="#mar"><speaker rend="italic">Marc.</speaker> <l>Tis gone, O we doe it wrong, being so maiesti&#x00AD;
+<lb/>call, to offer it the shew of violence,</l>
+<l>For it is as the ayre invelmorable,</l>
+<l>And our vaine blowes malitious mockery.</l></sp>
+    <sp who="#bar"><speaker>2.</speaker> <l>It was about to speake when the Cocke crew.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>And then it faded like a guilty thing,</l>
+<l>Vpon a fearefull summons: I haue heard</l>
+<l>The Cocke, that is the trumpet to the morning,</l>
+<l>Doth with his earely and shrill crowing throate,</l>
+<l>Awake the god of day, and at his sound,</l>
+<l>Whether in earth or ayre, in sea or fire,</l>
+<l>The strauagant and erring spirite hies</l>
+<l>To his confines, and of the trueth heereof</l>
+<l>This present obiect made probation.</l></sp>
+<sp who="#mar"><speaker rend="italic">Marc.</speaker> <l>It faded on the crowing of the Cocke,</l>
+<l>Some say, that euer gainst that season comes,</l>
+<l>Wherein our Sauiours birth is celebrated,</l>
+<fw type="catchword" place="foot-right">The</fw>
+ <pb facs="#ham-1603-22275x-hun-c01-image007" xml:id="ham-1603-22275x-hun-c01-007b"/>
+<fw type="runningHeader" place="top-centre" rend="italic">Prince of Denmarke.</fw>
+<l>The bird of dawning singeth all night long,</l>
+<l>And then they say, no spirite dare walke abroade,</l>
+<l>The nights are wholesome, then no planet frikes,</l>
+<l>No Fairie takes, nor Witch hath powre to charme,</l>
+<l>So gratious, and so hallowed is that time.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>So haue I heard, and doe in parte beleeue it:</l>
+<l>But see the Sunne in russet mantle clad,</l>
+<l>Walkes ore the deaw of yon hie mountaine top,</l>
+<l>Breake we our watch vp, and by my aduise,</l>
+<l>Let vs impart what wee haue seene to night</l>
+<l>Vnto yong <name type="character" ref="#ham" rend="italic">Hamlet</name>: for vpon my life</l>
+<l>This Spirite dumbe to vs will speake to him:</l>
+<l>Do you consent, wee shall acquaint him with it,</l>
+<l>As needefull in our loue, fitting our duetie?</l></sp>
+<sp who="#mar"><speaker rend="italic">Marc.</speaker> <l>Lets doo&#x0027;t I pray, and I this morning know,</l>
+<l>Where we shall finde him most conueniently.</l></sp>
+        </div2>
+        <div2 type="scene" n="2">
+<stage rend="italic, centred" type="entrance">Enter King, Queene, <name type="character" ref="#ham">Hamlet</name>, <name type="character" ref="#lae">Leartes</name>, <name type="character" ref="#crb">Corambis</name>,
+<lb/>and the two Ambassadors, with Attendants.</stage>
+<sp who="#cla"><speaker rend="italic">King</speaker> <l>Lordes, we here haue writ to <name type="character" ref="#for" rend="italic">Fortenbrasse</name>,</l>
+<l>Nephew to olde <name type="character" ref="#nor" rend="italic">Norway</name>, who imp<subst><del type="overwritten" hand="#ag" resp="#fol">ud</del><add  hand="#ag" place="inline" type="intervention" resp="#fol">ot</add></subst>ent</l>
+<l>And bed&#x2010;rid, scarcely heares of this his</l>
+<l>Nephews purpose: and Wee heere dispatch</l>
+    <l>Yong good <name type="character" ref="#cor" rend="italic">Corneli<subst><del type="overwritten" hand="#ag" resp="#fol">a</del><add  hand="#ag" place="inline" type="intervention" resp="#fol">o</add></subst></name>, and you <name type="character" ref="#vol" rend="italic">Voltemar</name></l>
+<l>For bearers of these greetings to olde</l>
+<l><name type="character" ref="#nor" rend="italic">Norway</name>, giuing to you no further personall power</l>
+<l>To businesse with the King,</l>
+<l>Then those related articles do shew:</l>
+<l>Farewell, and let your haste commend your dutie.</l></sp>
+<sp who="#cor, vol"><speaker rend="italic">Gent.</speaker> <l>In this and all things will wee shew our dutie.</l></sp>
+<sp who="#cla"><speaker rend="italic">King.</speaker> <l>Wee doubt nothing, hartily farewel:</l>
+<l>And now <name type="character" ref="#lae" rend="italic">Leartes</name> what&#x0027;s the newes with you?</l>
+<l>You said you had a sute what i&#x0027;st <name type="character" ref="#lae" rend="italic">Leartes</name>?</l></sp>
+<sp who="#lae"><speaker rend="italic">Lea:</speaker> <l>My gratious Lord, your fauorable licence,</l>
+<l>Now that the funerall rites are all performed,<add place="margin-bot" type="bibliographic" hand="#ac" resp="#fol">30</add></l>
+<fw type="signature" place="foot-centre">B3</fw><fw type="catchword" place="foot-right">I</fw>
+ <pb facs="#ham-1603-22275x-hun-c01-image008" xml:id="ham-1603-22275x-hun-c01-008a"/>
+<fw type="runningHeader" place="top-centre" rend="italic">The Tragedie of Hamlet</fw>
+<l>I may haue leaue to go againe to <hi rend="italic">France</hi>,</l>
+<l>For though the fauour of your grace might stay mee,</l>
+<l>Yet something is there whispers in my hart,</l>
+<l>Which makes my minde and spirits bend all for <hi rend="italic">France</hi>.</l></sp>
+    <sp who="#cla"><speaker rend="italic">King<gap reason="illegible" agent="inkBlot" extent="1" unit="chars" resp="#fol"/></speaker> <l>Haue you your fathers leaue, <name type="character" ref="#lae" rend="italic">Leartes</name>?</l></sp>
+<sp who="#crb"><speaker rend="italic">Cor.</speaker> <l>He hath, my lord, wrung from me a forced graunt,</l>
+<l>And I beseech you grant your Highnesse leaue.</l></sp>
+<sp who="#cla"><speaker rend="italic">Ki<c rend="inverted">n</c>g</speaker> <l>With all our heart, <name type="character" ref="#lae" rend="italic">Leartes</name> fare thee well.</l></sp>
+<sp who="#lae"><speaker rend="italic">Lear.</speaker> <l>I in all loue and dutie take my leaue.</l></sp>
+<sp who="#cla"><speaker rend="italic">King.</speaker> <l>And now princely Sonne <name type="character" ref="#ham" rend="italic">Hamlet</name>,<stage rend="italic, inline" type="exit">Exit.</stage></l>
+<l>What meanes these sad and melancholy moodes?</l>
+<l>For your intent going to <hi rend="italic">Wittenberg</hi>,</l>
+<l>Wee hold it most vnmeet and vnconuenient,</l>
+<l>Being the Ioy and halfe heart of your mother.</l>
+<l>Therefore let mee intreat you stay in Court,</l>
+<l>All <hi rend="italic">Denmarkes</hi> hope our coosin and dearest Sonne.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>My lord, ti&#x0027;s not the sable sute I weare:</l>
+<l>No nor the teares that still stand in my eyes,</l>
+<l>Nor the distracted hauiour in the visage,</l>
+<l>Nor all together mixt with outward semblance,</l>
+<l>Is equall to the sorrow of my heart,</l>
+<l>Him haue I lost I must of force forgoe,</l>
+<l>These but the ornaments and sutes of woe.</l></sp>
+<sp who="#cla"><speaker rend="italic">King</speaker> <l>This shewes a louing care in you, Sonne <name type="character" ref="#ham" rend="italic">Hamlet</name>,</l>
+<l>But you must thinke your father lost a father,</l>
+<l>That father dead, lost his, and so shalbe vntill the</l>
+<l>Generall ending. Therefore cease laments,</l>
+<l>It is a fault gainst heauen, fault gainst the dead,</l>
+<l>A fault gainst nature, and in reasons</l>
+<l>Common course most certaine,</l>
+<l>None liues on earth, but hee is borne to die.</l></sp>
+<sp who="#ger"><speaker rend="italic">Que.</speaker> <l>Let not thy mother loose her praiers <name type="character" ref="#ham" rend="italic">Hamlet</name>,</l>
+<l>Stay here with vs, go not to <hi rend="italic">Wittenberg</hi>.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>I shall in all my best obay you madam.</l></sp>
+<sp who="#cla"><speaker rend="italic">King</speaker> <l>Spoke like a kinde and a most louing Sonne,</l>
+<l>And there&#x0027;s no health the King shall drinke to day,</l>
+<fw type="catchword" place="foot-right">But</fw>
+ <pb facs="#ham-1603-22275x-hun-c01-image008" xml:id="ham-1603-22275x-hun-c01-008b"/>
+<fw type="runningHeader" place="top-centre" rend="italic">Prince of Denmarke.</fw>
+<l>But the great Canon to the clowdes shall tell</l>
+<l>The rowse the King shall drinke vnto Prince <name type="character" ref="#ham" rend="italic">Hamlet</name>.</l></sp>
+<stage rend="italic, centred" type="exit">Exeunt all but <name type="character" ref="#ham">Hamlet</name>.</stage>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>O that this too much grieu&#x0027;d and sallied flesh</l>
+<l>Would melt to nothing, or that the vniuersall</l>
+<l>Globe of heauen would turne al to a Chaos!</l>
+<l>O God within two moneths; no not two: maried,</l>
+<l>Mine vncle: O let me not thinke of it,</l>
+<l>My fathers brother: but no more like</l>
+<l>My father, then I to <hi rend="italic">Hercules</hi>.</l>
+<l>Within two months, ere yet the salt of most</l>
+<l>Vnrighteous teates had left their flushing</l>
+<l>In her galled eyes: she married, O God, a beast</l>
+<l>Deuoyd of reason would not haue made</l>
+<l>Such speede: Frailtie, thy name is Woman,</l>
+<l>Why she would hang on him, as if increase</l>
+<l>Of appetite had growne by what it looked on.</l>
+<l>O wicked wicked speede, to make such</l>
+<l>Dexteritie to incestuous sheetes,</l>
+<l>Ere yet the shooes were olde,</l>
+<l>The which she followed my dead fathers corse</l>
+<l>Like <hi rend="italic">Nyobe</hi>, all teares: married, well it is not,</l>
+<l>Nor it cannot come to good:</l>
+<l>But breake my heart, for I must holde my tongue.</l></sp>
+<stage rend="centred" type="entrance"><hi rend="italic">Enter</hi> <name type="character" ref="#hor">Horatio</name> <hi rend="italic">and</hi> <name type="character" ref="#mar">Marcellus</name>.</stage>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Health to your Lordship.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>I am very glad to see you, (<name type="character" ref="#hor">Horatio</name>) or I much
+<lb/>forget my selfe.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>The same my Lord, and your poore seruant euer.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>O my good friend, I change that name with you:
+<lb/>but what make you from <hi rend="italic">Wittenberg</hi> <name type="character" ref="#hor" rend="italic">Horatio</name>?</l>
+<l><name type="character" ref="#mar" rend="italic">Marcellus</name>.</l></sp>
+<sp who="#mar"><speaker rend="italic">Marc.</speaker> <l>My good Lord.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>I am very glad to see you, good euen sirs:</l>
+<l>But what is your affaire in <hi rend="italic">Elsenoure?</hi></l>
+<l>Weele teach you to drinke deepe ere you depart.<add place="margin-bot" type="bibliographic" hand="#ac" resp="#fol">31</add></l></sp>
+<fw type="catchword" place="foot-right" rend="italic">Hor.</fw>
+ <pb facs="#ham-1603-22275x-hun-c01-image009" xml:id="ham-1603-22275x-hun-c01-009a"/>
+<fw type="runningHeader" place="top-centre" rend="italic">The Tragedy of Hamlet</fw>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>A trowant disposition, my good Lord.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Nor shall you make mee truster</l>
+<l>Of your owne report against your selfe:</l>
+<l>Sir, I know you are no trowant:</l>
+<l>But what is your affaire in <hi rend="italic">Elsenoure</hi>?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>My good Lord, I came to see your fathers funerall.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>O I pre thee do not mocke mee fellow studient,</l>
+<l>I thinke it was to see my mothers wedding.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Indeede my Lord, it followed hard vpon.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Thrift, thrift, <name type="character" ref="#hor" rend="italic">Horatio</name>, the funerall bak&#x0027;t meates</l>
+<l>Did coldly furnish forth the marriage tables,</l>
+<l>Would I had met my deerest foe in heauen</l>
+<l>Ere euer I had seene that day <name type="character" ref="#hor" rend="italic">Horatio</name>;</l>
+<l>O my father, my father, me thinks I see my father,</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Where my Lord?</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Why, in my mindes eye <name type="character" ref="#hor" rend="italic">Horatio</name>.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>I saw him once, he was a gallant King.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>He was a man, take him for all in all,</l>
+<l>I shall not looke vpon his like againe.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>My Lord, I thinke I saw him yesternight,</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Saw, who?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>My Lord, the King your father.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Ha, ha, the King my father ke you.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Ceasen your admiration for a while</l>
+<l>With an attentiue eare, till I may deliuer,</l>
+<l>Vpon the witnesse of these Gentlemen</l>
+<l>This wonder to you.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>For Gods loue let me heare it.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Two nights together had these Gentlemen,</l>
+<l><name type="character" ref="#mar" rend="italic">Marcellus</name> and <name type="character" ref="#bar" rend="italic">Bernardo</name>, on their watch,</l>
+<l>In the dead vast and middle of the night.</l>
+<l>Beene thus incountered by a figure like your father,</l>
+<l>Armed to poynt, exactly <hi rend="italic">Capapea</hi></l>
+<l>Appeeres before them thrise, he walkes</l>
+<l>Before their weake and feare oppressed eies.</l>
+<l>Within his tronchions length,</l>
+<fw type="catchword" place="foot-right">While</fw>
+ <pb facs="#ham-1603-22275x-hun-c01-image009" xml:id="ham-1603-22275x-hun-c01-009b"/>
+<fw type="runningHeader" place="top-centre" rend="italic">Prince of Denmarke</fw>
+<l>While they distilled almost to gelly.</l>
+<l>With the act of feare stands dumbe,</l>
+<l>And speake not to him: this to mee</l>
+<l>In dreadfull secresie impart they did.</l>
+<l>And I with them the third night kept the watch,</l>
+<l>Where as they had deliuered forme of the thing.</l>
+<l>Each part made true and good,</l>
+<l>The Apparition comes: I knew your father,</l>
+<l>These handes are not more like.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Tis very strange.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>As I do liue, my honord lord, tis true,</l>
+<l>And wee did thinke it right done,</l>
+<l>In our dutie to let you know it.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Where was this?</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>My Lord, vpon the platforme where we watched.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Did you not speake to it?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>My Lord we did, but answere made it none,</l>
+<l>Yet once me thought it was about to speake,</l>
+<l>And lifted vp his head to motion,</l>
+<l>Like as he would speake, but euen then</l>
+<l>The morning cocke crew lowd, and in all haste,</l>
+<l>It shruncke in haste away, and vanished</l>
+<l>Our sight.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Indeed, indeed sirs, but this troubles me:</l>
+<l>Hold you the watch to night?</l></sp>
+            <sp who="#hor, mar, bar"><speaker rend="italic">All</speaker> <l>We do my Lord.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Armed say ye?</l></sp>
+            <sp who="#hor, mar, bar"><speaker rend="italic">All</speaker> <l>Armed my good Lord.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>From top to toe?</l></sp>
+            <sp who="#hor, mar, bar"><speaker rend="italic">All.</speaker> <l>My good Lord, from head to foote.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Why then saw you not his face?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>O yes my Lord, he wore his beuer vp.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>How look&#x0027;t he, frowningly?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>A countenance more in sorrow than in anger.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Pale, or red?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Nay, verie pal<add place="margin-bot" type="bibliographic" hand="#ac" resp="#fol">32</add></l></sp>
+<fw type="signature" place="foot-centre">C</fw><fw type="catchword" place="foot-right" rend="italic">Ham.</fw>
+ <pb facs="#ham-1603-22275x-hun-c01-image010" xml:id="ham-1603-22275x-hun-c01-010a"/>
+    <fw type="runningHeader" place="top-centre"><gap reason="absent" agent="cropped" extent="4" unit="words" resp="#fol"/></fw>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>And fixt his eies vpon you.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>Most constantly.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>I would I had beene there.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>It would a much amazed you.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>Yea very like, very like, staid it long?</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>While one with moderate pace</l>
+<l>Might tell a hundred.</l></sp>
+<sp who="#mar"><speaker rend="italic">Mar.</speaker> <l>O longer, longer.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>His beard was grisleld, no.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>It was as I haue seene it in his life,</l>
+<l>A sable siluer.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>I wil watch to night, perchance t&#x0027;wil walke againe.</l></sp>
+<sp who="#hor"><speaker rend="italic">Hor.</speaker> <l>I warrant it will.</l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>If it assume my noble fathers person,</l>
+<l>Ile speake to it, if hell it selfe should gape,</l>
+<l>And bid me hold my peace, Gentlemen,</l>
+<l>If you haue hither consealed this sight,</l>
+<l>Let it be tenible in your silence still,</l>
+<l>And whatsoeuer else shall chance to night,</l>
+<l>Giue it an vnderstanding, but no tongue,</l>
+<l>I will requit your loues, so fare you well,</l>
+<l>Vpon the platforme, twixt eleuen and twelue,</l>
+<l>Ile visit you.</l></sp>
+            <sp who="#hor, mar, bar"><speaker rend="italic">All.</speaker> <l>Our duties to your honor.<stage rend="italic, inline" type="exit">excunt.</stage></l></sp>
+<sp who="#ham"><speaker rend="italic">Ham.</speaker> <l>O your loues, your loues, as mine to you,</l>
+<l>Farewell, my fathers spirit in Armes,</l>
+<l>Well, all&#x0027;s not well. I doubt some foule play,</l>
+<l>Would the night were come,</l>
+<l>Till then, sit still my soule, foule deeds will rise</l>
+<l>Though all the world orewhelme them to mens eies.<stage rend="italic, inline" type="exit">Exit.</stage></l></sp>
+        </div2>
+<trailer><hi rend="italic">Finis</hi></trailer>
+</div1>
+</body>
+</text>
+</TEI>

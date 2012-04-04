@@ -1,7 +1,7 @@
 release/
 dist/
 logs/
-
+backup/
 Unsaved\ Document*
 .DS_Store
 *.swp
