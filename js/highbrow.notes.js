@@ -5,6 +5,12 @@ var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
     nPanel.element = document.getElementById(conf.notesPanel);
     nPanel.headerElement = document.getElementById(conf.notesHeader);
 
+    nPanel.showHelp = function() {
+	$(nPanel.element).html('<p class="HB_panelHelp">Click on a <span class="HB_noted">note</span> in the text on the right to inspect it here.</p>');    
+    };
+
+    nPanel.showHelp();
+
     nPanel.showSpNotes = function(sp) {
 	//$(nPanel.element).html("Will show notes at sp: " + sp);
 	var html = "<ul>";

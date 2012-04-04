@@ -49,6 +49,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	conf.minCharPerPx = conf.minCharPerPx ? conf.minCharPerPx : .01; 
 	conf.defaultTrackSize = conf.defaultTrackSize ? conf.defaultTrackSize : 20;
 	conf.noteMarkMode = conf.noteMarkMode ? conf.noteMarkMode : "narrow";
+	conf.intro='';
     };
 
     hb.init = function() {

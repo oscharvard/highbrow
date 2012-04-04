@@ -13,6 +13,12 @@ var HighbrowSelectionPanel = this.HighbrowSelectionPanel = function(hb,conf) {
 	sPanel.element = document.getElementById(conf.sectionPanel);
 	sPanel.headerElement = document.getElementById(conf.sectionHeader);
 	sPanel.attachMouseListeners();
+	sPanel.showHelp();
+    };
+
+
+    sPanel.showHelp = function() {
+	$(sPanel.element).html('<p class="HB_panelHelp">Click on a section above to inspect it here.</p>');    
     };
 
     // sequence annotation range selection methods.

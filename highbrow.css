@@ -42,6 +42,17 @@ a {
 	border: 1px solid #ddd;	
 }
 
+.HB_noted {
+    background: yellow;
+}
+
+.HB_panelHelp {
+    font-style: italic;
+    text-align: center;
+    margin-top: 50px;
+}
+
+
 // Datatables stuff.
 // theme roller doesn't quite cut it.
 

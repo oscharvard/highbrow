@@ -324,6 +324,7 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 
     map.drawSimpleStructuralFeature = function(f,fi,y,h,label) {
 	// label must be a STRING.
+	label = label.replace("\n"," ",label);
 	map.alternateColor(fi,hb.GOLD,153);
 	var start = map.visiblePxInt(f.start+1);
 	var stop  = map.visiblePxInt(f.stop);
