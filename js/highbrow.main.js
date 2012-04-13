@@ -32,7 +32,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	if ( conf.title ) {
 	    hb.title = conf.title;
 	} else {
-	    hb.title = "A Highbrow Visualization of ";
+	    hb.title = "";
 	    if ( conf.sequence.hasOwnProperty('name') ) {
 		hb.title += conf.sequence.name;
 	    } else {

@@ -1,5 +1,5 @@
 <?php
-$u = "http://thestudyhabit.org/highbrow/dev/git/highbrow/demo/tei/data/miniham.xml";
+$u = "http://thestudyhabit.org/highbrow/dev/git/highbrow/demo/tei/data/mac.xml";
 if ( isset($_GET["u"])){
   $u=$_GET['u'];
 }
@@ -29,6 +29,10 @@ if ( isset($_GET["u"])){
 <!-- highbrow data and configuration -->
 <script language="javascript" src="tei2hb.php?u=<?php echo $u;?>"></script>
 
+<!-- tei data source selection widget -->
+
+<script language="javascript" src="tei-select.js"></script>
+
 </head>
 
 <body>
@@ -42,6 +46,14 @@ hbconf.tracks = tracks;
 hbconf.structure = structure;
 hbconf.container = "HB_container";
 var hb = new Highbrow(hbconf);
+
+
+$(document).ready(function() {
+    $('.HB_title').append('<div class="HB_nav" style="vertical-align: text-middle; margin: 5px;"> [&nbsp;<a id="HB_tei_select" href="#s">Load&nbsp;Text</a>&nbsp;] </div>');
+    var dialog =  new HighbrowTEISelectionDialog('<?php echo $u; ?>');
+  }); 
+
+
 </script>
 
 </body>
