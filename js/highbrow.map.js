@@ -274,6 +274,10 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	map.p.textAlign(map.p.LEFT,map.p.BOTTOM)
     };
 
+    map.rankStructuralFeatures = function(){
+	
+    };
+
     map.drawStructuralFeature = function (t,f,fi,min,max){
 	// reinhard: we should count all the structure notes in each tier.
 	// both to draw the alternating colors properly and

@@ -13,7 +13,9 @@ var Highbrow = this.Highbrow = function(conf) {
     // Map, Sequence Panel, Notes Panel (and possible additional data
     // managers)
 
-    if (! (this instanceof Highbrow)) throw "called Highbrow constructor as if it were a function: missing 'new'.";
+    if (! (this instanceof Highbrow)) {
+	throw "called Highbrow constructor as if it were a function: missing 'new'.";
+    }
 
     var hb = this;
 
@@ -22,10 +24,10 @@ var Highbrow = this.Highbrow = function(conf) {
     hb.validateConf = function(){
 	// make sure we have required configuration parameters.
 	// set defaults for optional parameters.
-	if (! (conf.container)) throw "no container div id provided!";
-	if (! (conf.sequence )) throw "no sequence configuration provided!";
-	if (! (conf.tracks )) throw "no tracks configuration provided!";
-	if (! (conf.structure )) throw "no structure configuration provided!";
+	if (! (conf.container)) { throw "no container div id provided!"; }
+	if (! (conf.sequence )) { throw "no sequence configuration provided!"; }
+	if (! (conf.tracks )) { throw "no tracks configuration provided!"; }
+	if (! (conf.structure )) { throw "no structure configuration provided!"; }
 
 	hb.container = conf.container;
 
@@ -46,7 +48,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	conf.sectionPanel  = hb.prefix + "sectionPanel";
 	conf.sectionHeader = hb.prefix + "sectionHeader";
 	conf.groups = conf.groups ? conf.groups : [];
-	conf.minCharPerPx = conf.minCharPerPx ? conf.minCharPerPx : .01; 
+	conf.minCharPerPx = conf.minCharPerPx ? conf.minCharPerPx : 0.01; 
 	conf.defaultTrackSize = conf.defaultTrackSize ? conf.defaultTrackSize : 20;
 	conf.noteMarkMode = conf.noteMarkMode ? conf.noteMarkMode : "narrow";
 	conf.intro='';
@@ -62,7 +64,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.noteMarkMode = conf.noteMarkMode;
 	hb.initSequence(conf.sequence);
 	hb.map = new HighbrowMap(hb,conf);	
-	hb.map.initProcessing()
+	hb.map.initProcessing();
 	hb.name = "Highbrow.js Instance";
 	hb.initTracks(conf.tracks,conf.groups,conf.structure);
 	hb.sPanel   = new HighbrowSelectionPanel(hb,conf);
@@ -93,10 +95,10 @@ var Highbrow = this.Highbrow = function(conf) {
     
     hb.updateNavState = function(){
 	var fragment = $.deparam.fragment();
-	var sid = fragment['select'] ? fragment['select'] : "";
-	var zid = fragment['zoom']   ? fragment['zoom'] : ""; // could be multiple.
-	var spa = fragment['start'] ? fragment['start'] : "";
-	var spz = fragment['stop'] ? fragment['stop'] : "";
+	var sid = fragment.select ? fragment.select : "";
+	var zid = fragment.zoom   ? fragment.zoom : ""; // could be multiple.
+	var spa = fragment.start ? fragment.start : "";
+	var spz = fragment.stop ? fragment.stop : "";
 	// noteSection ?
 	if ( sid ) {
 	    var s = hb.sectionById[sid];
@@ -138,7 +140,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.structure = structure;
 	hb.trackById = {};
 	hb.visibleTracks = [];
-	if ( hb.sequence.type == "video" ) {
+	if ( hb.sequence.type === "video" ) {
 	    hb.positionDurationNotes();
 	}
 	// add track groups to tracks. also rethink as with structure.
@@ -492,7 +494,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	var args = [];
 	args.push( { "type": "checkbox" });
 	var i = 0;
-	if (hb.cb.arguments[0]==true){
+	if (hb.cb.arguments[0]===true){
 	    args.push( { "checked" : "checked" } );
 	}
 	i=1;
