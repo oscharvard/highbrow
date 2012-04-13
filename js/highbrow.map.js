@@ -275,6 +275,9 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
     };
 
     map.drawStructuralFeature = function (t,f,fi,min,max){
+	// reinhard: we should count all the structure notes in each tier.
+	// both to draw the alternating colors properly and
+	// to figure out the resolutions at which to transition between tiers.
 	// draw structural features appropriate for current zoom level
 	// Bible: book -> chapter -> verse
 	// Plato: dialog -> [book number] -> stephanus number -> section letter.

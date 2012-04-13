@@ -18,13 +18,15 @@ function main(){
     exit();
   }
 
+
+
   $message = "";
 
 
   $js_file = "cache/js/" . hash('md5', $url,false) . ".js";
   $js_f ="";
 
-  if (file_exists($js_file) ){
+  if ( ! isset($_GET['bust']) and file_exists($js_file) ){
     print file_get_contents($js_file);
     exit();
   } else {
@@ -68,7 +70,7 @@ function main(){
 
   $conf = array();
   # note: these are required for TEI-A: div, l
-  $conf['structureTags']= array("div","div1","div2","div3","div4","div5","div6","l","p", "speaker","ab","sp","head");
+  $conf['structureTags']= array("div","div1","div2","div3","div4","div5","div6","lg","l","p", "speaker","ab","sp","head");
   $conf['bottomStructureTags'] = array("l","ab","p");
   $conf['noteTags'] = array("note","signature","catchword","add","gap","scene","stage");
   $conf['ignoreTags'] = array("fw"); # ignore text in these tags.
@@ -152,7 +154,7 @@ function mapText( $conf, &$sequence, &$nodes,&$noteCount,&$notes,&$structureNote
     $note["start"] = mb_strlen($sequence["data"],"utf-8");
     $note["name"] = $node->nodeName;
     if ( $isStructureNote ) {
-      if ( preg_match("/^div/",$node->nodeName) ) {
+      if ( true || preg_match("/^div/",$node->nodeName) ) {
 
 	#$note['name']=$a->getNamedItem("id")->nodeValue;
 
@@ -227,7 +229,7 @@ function mapText( $conf, &$sequence, &$nodes,&$noteCount,&$notes,&$structureNote
   
 function attach_note_id($node,&$note,$noteCount,$isStructureNote){
   $a = $node->attributes;
-  if ( $a and $a->getNamedItem("id") ) {
+  if ( isset($a) and $a->getNamedItem("id") ) {
     $note['id']=$a->getNamedItem("id")->nodeValue;
   } else {
     $note["id"] = $node->nodeName . "." . $noteCount . '.' . ($isStructureNote ? "s" : "n");
@@ -235,11 +237,24 @@ function attach_note_id($node,&$note,$noteCount,$isStructureNote){
 }
 
 function attach_structure_note_name($node,&$note){
+  # for divs (scenes, acts, chapters, etc.)
   $headNodes = $node->getElementsByTagName('head');
   foreach ($headNodes as $headNode ) {
     $note['name'] = $headNode->nodeValue."";
     return;
   }
+  $a = $node->attributes;
+  if ( isset($a) ) {
+    if ($a->getNamedItem("n")) {
+      # for numbered lines
+      $note['name']=$a->getNamedItem("n")->nodeValue;
+      return;
+    } else if ( $a->getNamedItem("who") ) {
+      # for speakers
+      $note['name']=$a->getNamedItem("who")->nodeValue;
+      return;
+    }
+  } 
   $note['name']=$note['id'];
 }
 
