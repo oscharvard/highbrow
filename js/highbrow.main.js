@@ -148,13 +148,17 @@ var Highbrow = this.Highbrow = function(conf) {
 	    groups[gi].type="group";
 	    tracks.unshift(groups[gi]);
 	}
+
 	// add structure to tracks. Rethink. Probably cleaner to keep separate? 
+	// also confusing: there can be multiple structures?
 	for (var si=0; si < structure.length; si++ ) {
 	    structure[si].type="structure";
 	    tracks.unshift(structure[si]);
 	    hb.sectionById={};
 	    hb.buildSectionById(structure[si].notes);
+	    hb.countStructureNoteLevels(structure[si].notes,0,[]);
 	}
+
 	// clean up tracks and build lookup by id table.
 	for (var ti=0; ti < tracks.length; ti++ ) {
 	    var t = tracks[ti];
@@ -343,6 +347,28 @@ var Highbrow = this.Highbrow = function(conf) {
 	}
 	return 0;
     };
+
+    hb.countStructureNoteLevels = function(notes,level,noteIndex) {
+	// figure out what level each structural note is on (root ancestors: 0, children: 1, grandchildren: 2, etc)
+	// and the position in each level: grandchild #2,3,4 etc. for alternating color display.
+	var i=0;
+	var n;
+	if ( noteIndex.length < level+1 )  {
+	    noteIndex.push(0);
+	}
+	for ( i ; i < notes.length; i++ ) {
+	    n=notes[i];
+	    n.l=level;
+	    n.li=noteIndex[level];
+	    //n.name="L:"+n.l+":"+n.li;
+	    noteIndex[level]++;
+	    if ( n.hasOwnProperty('children') ) {
+		//alert(hb.dump(noteIndex));
+		hb.countStructureNoteLevels(n.children,level+1,noteIndex);
+	    }
+	}
+    };
+
 
     // bounds adjustment to fill screen (should be optional)
 

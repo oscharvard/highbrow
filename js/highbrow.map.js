@@ -274,10 +274,6 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	map.p.textAlign(map.p.LEFT,map.p.BOTTOM)
     };
 
-    map.rankStructuralFeatures = function(){
-	
-    };
-
     map.drawStructuralFeature = function (t,f,fi,min,max){
 	// reinhard: we should count all the structure notes in each tier.
 	// both to draw the alternating colors properly and
@@ -324,8 +320,10 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 
     map.drawSimpleFeatures = function(features,y,height,labelPrefix) {
 	for (var i=0; i < features.length; i++){  
-	    var f = features[i];
-	    map.drawSimpleStructuralFeature(f,i,y,height,labelPrefix + f.name);  
+	    var n = features[i];
+	    // reinos
+	    //drawMethod(t,n, n.hasOwnProperty('li') ? n.li : ai,min,max);
+	    map.drawSimpleStructuralFeature(n,n.hasOwnProperty('li') ? n.li : i,y,height,labelPrefix + n.name);  
 	}
     };
 
@@ -373,7 +371,9 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	for (var ai=0; ai < t['notes'].length; ai++){  
 	    var n =  t['notes'][ai];
 	    if ( hb.overlaps(n.start,n.stop,map.spa,map.spz)){
-		drawMethod(t,n,ai,min,max);
+		// REINOS: this is where we replace index with sf.level.i or whatever.
+		drawMethod(t,n, n.hasOwnProperty('li') ? n.li : ai,min,max);
+		//drawMethod(t,n, 1,min,max);
 	    }
 	}
     };
