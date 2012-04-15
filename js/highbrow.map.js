@@ -275,8 +275,9 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
     };
 
     map.drawStructuralFeature = function (t,f,fi,min,max){
+	// REINOS
 	// reinhard: we should count all the structure notes in each tier.
-	// both to draw the alternating colors properly and
+	// both to draw the alternating colors properly (DONE) and
 	// to figure out the resolutions at which to transition between tiers.
 	// draw structural features appropriate for current zoom level
 	// Bible: book -> chapter -> verse
@@ -294,8 +295,9 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	var bottomFeatures = [];
 	var topFeatures = [];
 	var topPrefix = "";
-	if (  map.pxPerChar() > .005 ) {
-	    if ( map.pxPerChar() > .1 ) {
+	var bottomVisibleLevel = map.bottomVisibleLevel();
+	if (  bottomVisibleLevel > 0 ) {
+	    if ( bottomVisibleLevel > 1 ) {
 		// show verses on bottom and book-chapters on top.
 		topPrefix = f.name + " : ";
 		topFeatures = f.children;
@@ -309,20 +311,34 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 		map.drawSimpleStructuralFeature(f,fi,y-(t.size/2),height/2,f.name);  
 		bottomFeatures = f.children;
 	    }
+	    var height = t.size / 2;
+	    map.drawSimpleFeatures(topFeatures,y-height,height,topPrefix);
+	    map.drawSimpleFeatures(bottomFeatures,y,height,"");
 	} else {
-	    // only show books.
+	    // only show top level (eg., biblical books).
 	    map.drawSimpleStructuralFeature(f,fi,y,height,f.name);  
 	}
-	var height = t.size / 2;
-	map.drawSimpleFeatures(topFeatures,y-height,height,topPrefix);
-	map.drawSimpleFeatures(bottomFeatures,y,height,"");
+
+    };
+
+    map.bottomVisibleLevel = function(){
+	// if 0, then single level
+	// if anything else, then there are 2 levels, with this level on the bottom
+	// and all above levels concatenated on top.
+	// determination is based on number of total levels
+	// and map.pxPerChar
+	if (map.pxPerChar() > 0.005) {
+	    if (map.pxPerChar() > 0.1 ) {
+		return 2;
+	    }
+	    return 1;
+	}
+	return 0;
     };
 
     map.drawSimpleFeatures = function(features,y,height,labelPrefix) {
 	for (var i=0; i < features.length; i++){  
 	    var n = features[i];
-	    // reinos
-	    //drawMethod(t,n, n.hasOwnProperty('li') ? n.li : ai,min,max);
 	    map.drawSimpleStructuralFeature(n,n.hasOwnProperty('li') ? n.li : i,y,height,labelPrefix + n.name);  
 	}
     };
@@ -371,9 +387,7 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	for (var ai=0; ai < t['notes'].length; ai++){  
 	    var n =  t['notes'][ai];
 	    if ( hb.overlaps(n.start,n.stop,map.spa,map.spz)){
-		// REINOS: this is where we replace index with sf.level.i or whatever.
 		drawMethod(t,n, n.hasOwnProperty('li') ? n.li : ai,min,max);
-		//drawMethod(t,n, 1,min,max);
 	    }
 	}
     };
