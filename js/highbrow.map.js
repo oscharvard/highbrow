@@ -308,7 +308,7 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 		}
 	    } else {
 		// show chapters on bottom and books on top.
-		map.drawSimpleStructuralFeature(f,fi,y-(t.size/2),height/2,f.name);  
+		topFeatures = [ f ];
 		bottomFeatures = f.children;
 	    }
 	    var height = t.size / 2;
@@ -318,7 +318,6 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	    // only show top level (eg., biblical books).
 	    map.drawSimpleStructuralFeature(f,fi,y,height,f.name);  
 	}
-
     };
 
     map.bottomVisibleLevel = function(){
