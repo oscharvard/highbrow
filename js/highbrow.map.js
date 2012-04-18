@@ -297,35 +297,27 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	var topPrefix = "";
 	var bottomVisibleLevel = map.bottomVisibleLevel();
 	if (  bottomVisibleLevel > 0 ) {
-
-	    if ( bottomVisibleLevel > 1 ) {
-		// show verses on bottom and book-chapters on top, etc.
-		// reinos: new logic: top features are features above bottomVisibleLevel
-		// top feature labels are concatenations of all ancestors (topPrefix).
-		topPrefix = f.name + " : ";
-		topFeatures = f.children;
-		for ( var i=0; i < topFeatures.length; i++ ) {
-		    for ( var ii=0; ii < topFeatures[i].children.length; ii++ ) {      
-			bottomFeatures.push(topFeatures[i].children[ii]);
-		    }
-		}
-	    } else {
-		// show chapters on bottom and books on top.
-		topFeatures = [ f ];
-		bottomFeatures = f.children;
-	    }
 	    var height = t.size / 2;
-	    map.drawSimpleFeatures(topFeatures,y-height,height,topPrefix);
-	    map.drawSimpleFeatures(bottomFeatures,y,height,"");
+	    map.descendStructureTier(f,y,height,"",1,bottomVisibleLevel);
 	} else {
 	    // only show top level (eg., biblical books).
 	    map.drawSimpleStructuralFeature(f,fi,y,height,f.name);  
 	}
     };
 
+    map.descendStructureTier = function(node,y,height,topPrefix,currentDepth,maxDepth) {
+	if ( currentDepth === maxDepth ) {
+	    map.drawTieredStructure(node,node.children,y,height,topPrefix);
+	} else {
+	    $.each(node.children,function(index,child) {
+		    map.descendStructureTier(child,y,height,topPrefix+ node.name+ " : ",currentDepth+1,maxDepth);
+		});
+	}
+    };
 
-    map.drawTieredStructure = function(){
-
+    map.drawTieredStructure = function(top,bottoms,y,height,topPrefix){
+	map.drawSimpleFeatures([top],y-height,height,topPrefix);
+	map.drawSimpleFeatures(bottoms,y,height,"");
     };
 
     map.bottomVisibleLevel = function(){
