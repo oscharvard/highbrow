@@ -297,8 +297,11 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	var topPrefix = "";
 	var bottomVisibleLevel = map.bottomVisibleLevel();
 	if (  bottomVisibleLevel > 0 ) {
+
 	    if ( bottomVisibleLevel > 1 ) {
-		// show verses on bottom and book-chapters on top.
+		// show verses on bottom and book-chapters on top, etc.
+		// reinos: new logic: top features are features above bottomVisibleLevel
+		// top feature labels are concatenations of all ancestors (topPrefix).
 		topPrefix = f.name + " : ";
 		topFeatures = f.children;
 		for ( var i=0; i < topFeatures.length; i++ ) {
@@ -320,17 +323,23 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	}
     };
 
+
+    map.drawTieredStructure = function(){
+
+    };
+
     map.bottomVisibleLevel = function(){
 	// if 0, then single level
 	// if anything else, then there are 2 levels, with this level on the bottom
 	// and all above levels concatenated on top.
 	// determination is based on number of total levels
 	// and map.pxPerChar
-	if (map.pxPerChar() > 0.005) {
-	    if (map.pxPerChar() > 0.1 ) {
-		return 2;
+	// hack for now to limit to 4 until you figure out what is going on with some tei shakespeare.
+	var bottomLevel = hb.structureLevels.length < 5 ? hb.structureLevels.length : 4;
+	for ( var i = bottomLevel; i > 0; i-- ) {
+	    if ( map.pxPerChar() > (hb.structureLevels[i] / (hb.sequence.length/6)) ) {
+		return i;
 	    }
-	    return 1;
 	}
 	return 0;
     };

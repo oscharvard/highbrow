@@ -156,7 +156,9 @@ var Highbrow = this.Highbrow = function(conf) {
 	    tracks.unshift(structure[si]);
 	    hb.sectionById={};
 	    hb.buildSectionById(structure[si].notes);
-	    hb.countStructureNoteLevels(structure[si].notes,0,[]);
+	    hb.structureLevels = [];
+	    hb.countStructureNoteLevels(structure[si].notes,0,hb.structureLevels);
+	    //alert(hb.dump(hb.structureLevels));
 	}
 
 	// clean up tracks and build lookup by id table.
@@ -351,6 +353,10 @@ var Highbrow = this.Highbrow = function(conf) {
     hb.countStructureNoteLevels = function(notes,level,noteIndex) {
 	// figure out what level each structural note is on (root ancestors: 0, children: 1, grandchildren: 2, etc)
 	// and the position in each level: grandchild #2,3,4 etc. for alternating color display.
+	if ( level >= 4 ) {
+	    // reinos: what is going on here? seems like may be messy data, tei shakespeare. investigate.
+	    ///alert("LEVEL: " + level + hb.dump(notes));
+	}
 	var i=0;
 	var n;
 	if ( noteIndex.length < level+1 )  {
@@ -362,7 +368,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	    n.li=noteIndex[level];
 	    //n.name="L:"+n.l+":"+n.li;
 	    noteIndex[level]++;
-	    if ( n.hasOwnProperty('children') ) {
+	    if ( n.hasOwnProperty('children') && n.children.length > 0 ) {
 		//alert(hb.dump(noteIndex));
 		hb.countStructureNoteLevels(n.children,level+1,noteIndex);
 	    }
