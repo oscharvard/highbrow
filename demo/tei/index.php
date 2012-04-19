@@ -20,8 +20,8 @@ if ( isset($_GET["u"])){
 <script src="../../js/highbrow.main.js"></script>
 <script src="../../js/highbrow.settings.js"></script>
 <script src="../../js/highbrow.search.js"></script>
-<script src="../../js/highbrow.selection.js"></script>
-<script src="../../js/highbrow.notes.js"></script>
+<script src="../../js/highbrow.spanel.js"></script>
+<script src="../../js/highbrow.npanel.js"></script>
 <script src="../../js/highbrow.map.js"></script>
 
 <link type="text/css" href="../../highbrow.css" rel="stylesheet" />

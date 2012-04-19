@@ -67,7 +67,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.map.initProcessing();
 	hb.name = "Highbrow.js Instance";
 	hb.initTracks(conf.tracks,conf.groups,conf.structure);
-	hb.sPanel   = new HighbrowSelectionPanel(hb,conf);
+	hb.sPanel   = new HighbrowSequencePanel(hb,conf);
 	hb.nPanel   = new HighbrowNotesPanel(hb,conf);
 	hb.settingsDialog = new HighbrowSettingsDialog(hb,conf);
 	hb.searchDialog = new HighbrowSearchDialog(hb,conf);
