@@ -109,7 +109,7 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	p.mouseDragged = function(){
 	    if ( map.isDragging ) {
 		var mouseTp = map.spa + (map.charPerPx() * p.mouseX);
-		var deltaTp = map.grabTp - map.mouseTp;
+		var deltaTp = map.grabTp - mouseTp;
 		var deltaPx = map.grabPx - p.mouseX;
 		if ( deltaTp ) {
 		    map.setVisibleRange(map.spa+deltaTp,map.spz+deltaTp);
@@ -120,7 +120,7 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	p.mousePressed = function(){
 	    if ( map.isOnDragPanArea() ) {
 		map.isDragging = true;
-		map.grapPx = p.mouseX;
+		map.grabPx = p.mouseX;
 		map.grabTp = map.spa + (map.charPerPx()*p.mouseX);
 	    }
 	};
