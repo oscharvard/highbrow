@@ -49,7 +49,7 @@ function main(){
   }
 
   $sequence = array();
-  $sequence["0debug"] = "Looks OK. File $tei_file $message";
+  $sequence["0debug"] = "Looks AOK. File $tei_file $message";
   $sequence["data"]="";
   $sequence["notes"] = array();
   $sequence["name"]="Untitled TEI Document";
@@ -71,6 +71,7 @@ function main(){
   $conf = array();
   # note: these are required for TEI-A: div, l
   $conf['structureTags']= array("div","div1","div2","div3","div4","div5","div6","lg","l","p", "speaker","ab","sp","head");
+  $conf['deadbeatParentStructureTags'] = array("lg"); # yes, these are structure. But we stick any children into it's parent (so grandparent of child). Why? To make sure all ls are on the same tier. Hack. Rethink at some point.
   $conf['bottomStructureTags'] = array("l","ab","p");
   $conf['noteTags'] = array("note","signature","catchword","add","gap","scene","stage");
   $conf['ignoreTags'] = array("fw"); # ignore text in these tags.
@@ -147,6 +148,8 @@ function mapText( $conf, &$sequence, &$nodes,&$noteCount,&$notes,&$structureNote
 
     #$note["nodeName"]  = $node->nodeName;
     $isStructureNote = in_array($node->nodeName,$conf['structureTags']);
+    $isDeadbeat      = $isStructureNote ? in_array($node->nodeName,$conf['deadbeatParentStructureTags'])  : false;
+    
     attach_note_id($node,$note,$noteCount,$isStructureNote);
 
     $noteCount++;
@@ -175,13 +178,17 @@ function mapText( $conf, &$sequence, &$nodes,&$noteCount,&$notes,&$structureNote
       }
     } else {
       $childsStructureNoteContainer =  &$structureNoteContainer;
-      if ( $isStructureNote ) {
+      if ( $isStructureNote && ! $isDeadbeat ) {
 	$childsStructureNoteContainer =  &$note["children"];
       } else if ( isset($structureNoteContainer) ) {
-	  $childsStructureNoteContainer = &$structureNoteContainer;
+	$childsStructureNoteContainer = &$structureNoteContainer;
       }
-	  mapText( $conf, $sequence, $node->childNodes,$noteCount,$notes,$childsStructureNoteContainer);
+      if (  in_array($node->nodeName,$conf['bottomStructureTags']) && isset($node->childNodes) && count($node->childNodes)==0){
+	$sequence['0debug'].="BOTTOM STRUCTURE TAG WITH CHILDREN: " . $note['id'];
+      } else {
+	mapText( $conf, $sequence, $node->childNodes,$noteCount,$notes,$childsStructureNoteContainer);
       }
+    }
     $note["stop"] = mb_strlen($sequence["data"],"utf-8");
       if ( false && in_array($node->nodeName,array("l","p","speaker"))) {
 # Debug. looks fine.
