@@ -136,8 +136,8 @@ var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
 	// combine with html selectedRange info and record range to
 	// annotate in sequence coordinates.
 	var selectedRange   = sPanel.getSelectedRange();
-	sPanel.selectedSpa  = sPanel.selectedSpaOffset + selectedRange.anchorOffset;
-	sPanel.selectedSpz  = sPanel.selectedSpzOffset  + selectedRange.focusOffset;
+	sPanel.selectedSpa  = sPanel.selectedSpaOffset + selectedRange.anchorOffset-1;
+	sPanel.selectedSpz  = sPanel.selectedSpzOffset  + selectedRange.focusOffset-1;
     };
 
     // build selection panel UI methods.
