@@ -134,41 +134,35 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	    }
 	    var a = map.sp(p.mouseX);
 	    var z = map.sp(p.mouseX+1);
-	    // get the biggest structural feature that is smaller than some threshold in this region.
-	    // if not structural features or nothing suitable, just get some default range of characters centered on click point.  
-	    // hack for now for bible.
-	    var sn;
-	    var sntrack = hb.visibleTracks[0];
-	    for (var i =0; i < sntrack.notes.length; i++ ) {
-		if ( sn ) {
-		    break;
-		}
-		var book = sntrack.notes[i];
-		if ( hb.overlaps(a,z,book.start,book.stop) ) {
-		    for (var ii =0; ii < book.children.length; ii++ ) {
-			var chapter = book.children[ii];
-			if ( hb.overlaps(a,z,chapter.start,chapter.stop) ) {
-			    if ( map.pxPerChar() > .1 ) {
-				// zoomed in enough to see verses and actually clicked on one.
-				// question: do you have to click on an sn to select it? I think so. 
-				// clicking elsewhere should deselect (or possibly do something else)
-				for (var iii =0; iii < chapter.children.length; iii++ ) {
-				    var verse = chapter.children[iii];
-				    if ( hb.overlaps(a,z,verse.start,verse.stop) ) {
-					sn = verse;
-					break;
-				    }
-				} 
-			    } else {
-				sn = chapter;
-			    }
-			    break;
-			}
+	    // select the clicked on structural feature.
+	    // REINOS
+	    var notes = hb.visibleTracks[0].notes;
+	    var bottomVisibleLevel = map.bottomVisibleLevel();
+	    $.each( notes, function(index, note ) {
+		    var selectedNote = map.getStructureNoteAt(note,0,bottomVisibleLevel,a,z);
+		    if ( selectedNote ) {
+			hb.selectSection(selectedNote);
+			return;
 		    }
-		}
-	    }
-	    hb.selectSection(sn);
+		});
 	};
+    };
+
+    map.getStructureNoteAt = function (note,currentDepth,maxDepth,a,z){
+	var match;
+	if ( currentDepth === maxDepth ) {
+	    if ( hb.overlaps(note.start,note.stop,a,z)) {
+		match = note;
+	    }
+	} else {
+	    $.each(note.children,function(index,child) {
+		    if (hb.overlaps(child.start,child.stop,a,z)){
+			match =map.getStructureNoteAt(child,currentDepth+1,maxDepth,a,z);
+			return;
+		    }
+		});
+	}
+	return match;
     };
 
     // Highbrow Map input handling methods..
@@ -296,6 +290,7 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	    map.drawSimpleStructuralFeature(f,fi,y,height,f.name);  
 	}
     };
+
 
     map.descendStructureTier = function(node,y,height,topPrefix,currentDepth,maxDepth) {
 	// Either draw given structural level node or descend a level deeper depending on current zoom level.
