@@ -175,7 +175,7 @@ var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
     };
 
     sPanel.getFinestGrainSubsections = function(section,subsections) {
-	if ( section.children && section.children.length > 0) {
+	if ( section.children && section.children.length > 0 && section.l <= hb.structureLevels.length) {
 	    for (var i=0; i < section.children.length; i++ ) {
 		sPanel.getFinestGrainSubsections(section.children[i],subsections);
 	    }

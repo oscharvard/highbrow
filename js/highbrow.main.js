@@ -75,16 +75,13 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.adjustBounds();
 	hb.updateNavState();
 	hb.attachListeners();
-
     };
 
     hb.attachListeners = function(){
-
 	$("#" + hb.prefix + "zoomIn").click(function(e){  hb.map.zoomIn()   ; e.preventDefault(); });
 	$("#" + hb.prefix + "zoomOut").click(function(e){ hb.map.zoomOut()   ; e.preventDefault(); });
 	$("#" + hb.prefix + "panLeft").click(function(e)  { hb.map.panLeft()  ; e.preventDefault(); });
 	$("#" + hb.prefix + "panRight").click(function(e) { hb.map.panRight() ; e.preventDefault(); });
-	
 	$(window).resize(function() {
 		hb.adjustBounds();
 	    });
@@ -157,7 +154,8 @@ var Highbrow = this.Highbrow = function(conf) {
 	    hb.sectionById={};
 	    hb.buildSectionById(structure[si].notes);
 	    hb.structureLevels = [];
-	    hb.countStructureNoteLevels(structure[si].notes,0,hb.structureLevels);
+	    hb.countStructureLevels(structure[si].notes,0,hb.structureLevels);
+	    hb.cleanStructureLevels(structure[si]);
 	    //alert(hb.dump(hb.structureLevels));
 	}
 
@@ -350,13 +348,26 @@ var Highbrow = this.Highbrow = function(conf) {
 	return 0;
     };
 
-    hb.countStructureNoteLevels = function(notes,level,noteIndex) {
+
+    hb.cleanStructureLevels = function(structure){
+	// structure must be inverted pyramid: more nodes than previous on each level.
+	// if this happens, ignore any structure levels below last good level.
+	var level, newStructureLevels;
+	newStructureLevels = [ hb.structureLevels[0] ];
+	for (level=1;  level < hb.structureLevels.length; level++ ) {
+	    if ( hb.structureLevels[level] < hb.structureLevels[level-1] ) {
+		//alert("PROBLEM: " + hb.dump(hb.structureLevels));		
+		hb.structureLevels=newStructureLevels;
+		break;
+	    } else {
+		newStructureLevels.push(hb.structureLevels[level]);
+	    }
+	}
+    };
+
+    hb.countStructureLevels = function(notes,level,noteIndex) {
 	// figure out what level each structural note is on (root ancestors: 0, children: 1, grandchildren: 2, etc)
 	// and the position in each level: grandchild #2,3,4 etc. for alternating color display.
-	if ( level >= 4 ) {
-	    // reinos: what is going on here? seems like may be messy data, tei shakespeare. investigate.
-	    ///alert("LEVEL: " + level + hb.dump(notes));
-	}
 	var i=0;
 	var n;
 	if ( noteIndex.length < level+1 )  {
@@ -366,11 +377,9 @@ var Highbrow = this.Highbrow = function(conf) {
 	    n=notes[i];
 	    n.l=level;
 	    n.li=noteIndex[level];
-	    //n.name="L:"+n.l+":"+n.li;
 	    noteIndex[level]++;
 	    if ( n.hasOwnProperty('children') && n.children.length > 0 ) {
-		//alert(hb.dump(noteIndex));
-		hb.countStructureNoteLevels(n.children,level+1,noteIndex);
+		hb.countStructureLevels(n.children,level+1,noteIndex);
 	    }
 	}
     };
