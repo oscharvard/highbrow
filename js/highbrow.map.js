@@ -135,12 +135,16 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	    var a = map.sp(p.mouseX);
 	    var z = map.sp(p.mouseX+1);
 	    // select the clicked on structural feature.
-	    // REINOS
-	    var notes = hb.visibleTracks[0].notes;
+	    var structureTrack = hb.visibleTracks[0];
+	    var notes = structureTrack.notes;
 	    var bottomVisibleLevel = map.bottomVisibleLevel();
 	    $.each( notes, function(index, note ) {
 		    var selectedNote = map.getStructureNoteAt(note,0,bottomVisibleLevel,a,z);
 		    if ( selectedNote ) {
+			// we clicked on the top tier
+			if ( bottomVisibleLevel > 0 &&   map.p.mouseY < ((map.defaultTrackSize+structureTrack.size)*.5)) {
+			    selectedNote = selectedNote.parent;
+			}
 			hb.selectSection(selectedNote);
 			return;
 		    }
@@ -157,6 +161,7 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	} else {
 	    $.each(note.children,function(index,child) {
 		    if (hb.overlaps(child.start,child.stop,a,z)){
+			child.parent = note; // temporarily need to keep track of this to support top tier click.
 			match =map.getStructureNoteAt(child,currentDepth+1,maxDepth,a,z);
 			return;
 		    }
