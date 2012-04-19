@@ -10,8 +10,8 @@ var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
 
     sPanel.init = function() {
 	sPanel.hb = hb;
-	sPanel.element = document.getElementById(conf.sectionPanel);
-	sPanel.headerElement = document.getElementById(conf.sectionHeader);
+	sPanel.element = document.getElementById(conf.sequencePanel);
+	sPanel.headerElement = document.getElementById(conf.sequenceHeader);
 	sPanel.attachMouseListeners();
 	sPanel.showHelp();
     };

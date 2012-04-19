@@ -45,8 +45,8 @@ var Highbrow = this.Highbrow = function(conf) {
 	conf.mapPanel      = hb.prefix + "mapPanel";
 	conf.notesPanel    = hb.prefix + "notesPanel";
 	conf.notesHeader   = hb.prefix + "notesHeader";
-	conf.sectionPanel  = hb.prefix + "sectionPanel";
-	conf.sectionHeader = hb.prefix + "sectionHeader";
+	conf.sequencePanel  = hb.prefix + "sequencePanel";
+	conf.sequenceHeader = hb.prefix + "sequenceHeader";
 	conf.groups = conf.groups ? conf.groups : [];
 	conf.minCharPerPx = conf.minCharPerPx ? conf.minCharPerPx : 0.01; 
 	conf.defaultTrackSize = conf.defaultTrackSize ? conf.defaultTrackSize : 20;
@@ -462,9 +462,9 @@ var Highbrow = this.Highbrow = function(conf) {
 	html+=hb.createHeaderPanel();
 	html+="<canvas id=\"" + hb.prefix + "mapPanel\" width=\"1000px\" height=\"100px\"></canvas>\n";
 	html+="<div id=\"" + hb.prefix + "bottomSelectionPanel\" style=\"width:870px; height:400px;float:left;\">\n";
-	html+="<div id=\"" + hb.prefix + "sectionHeader\" style=\"width:50%;float:left;text-align:center;font-weight: bold;padding-top: 5px\">Section</div>\n";
+	html+="<div id=\"" + hb.prefix + "sequenceHeader\" style=\"width:50%;float:left;text-align:center;font-weight: bold;padding-top: 5px\">Section</div>\n";
 	html+="<div id=\"" + hb.prefix + "notesHeader\" style=\"width:50%;float:right;text-align:center;font-weight: bold;padding-top: 5px;\">Notes</div>\n";
-	html+="<div id=\"" + hb.prefix + "sectionPanel\" style=\"width:50%;height:100%;overflow:auto;float:left;\"><p style=\"text-align: center;\"></p></div>\n";
+	html+="<div id=\"" + hb.prefix + "sequencePanel\" style=\"width:50%;height:100%;overflow:auto;float:left;\"><p style=\"text-align: center;\"></p></div>\n";
 	html+="<div id=\"" + hb.prefix + "notesPanel\" style=\"width:50%;height:100%;overflow:auto;float:right;\"><p style=\"text-align: center;\"></p></div>\n";
 	html+="</div>\n"; // bottom selection panel
 	html+="</div>\n"; // highbrow panel
