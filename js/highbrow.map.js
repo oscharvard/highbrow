@@ -82,7 +82,6 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	};
 	
 	p.mouseOver = function () {
-	    //alert("Mouseover!");
 	    // using jquery, remove focus from any other elements that may have it.
 	    // now we can take keyboard and mousewheel focus.
 	    map.mouseIsOver = true;
@@ -275,37 +274,31 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
     };
 
     map.drawStructuralFeature = function (t,f,fi,min,max){
-	// REINOS
-	// reinhard: we should count all the structure notes in each tier.
-	// both to draw the alternating colors properly (DONE) and
-	// to figure out the resolutions at which to transition between tiers.
-	// draw structural features appropriate for current zoom level
+	// draw one or two tiered structural bands appropriate for current zoom level
 	// Bible: book -> chapter -> verse
 	// Plato: dialog -> [book number] -> stephanus number -> section letter.
+	// Shakespeare: Play -> Act -> Scene -> Speaker -> Line
 	// http://plato-dialogues.org/faq/faq007.htm
 	// Make good use of space. No more than 2 horizontal bands at a time.
 	// Top band can show combined info for multiple levels.
-	// thresholds at which to show each level of subfeature could be set in the data.
-	// for now, hard code (need a default anyway).
-	// works great for bible (3 tiers). But will break on other number of tiers.
+	// Thresholds at which to show each level of substructure determined by average substructure node size at each level.
 	// actually, logic should be simple. bottom tier shows finest visible granulatity.
 	// top tier shows concatenation of all above tiers. 
-	var y = map.plotY;//+(t.size*(t.order+0)); 
+	var y = map.plotY;
 	var height = t.size;
-	var bottomFeatures = [];
-	var topFeatures = [];
-	var topPrefix = "";
 	var bottomVisibleLevel = map.bottomVisibleLevel();
 	if (  bottomVisibleLevel > 0 ) {
+	    // draw 2 tiers.
 	    var height = t.size / 2;
 	    map.descendStructureTier(f,y,height,"",1,bottomVisibleLevel);
 	} else {
-	    // only show top level (eg., biblical books).
+	    // draw 1 tier. Only show top level (eg., biblical books).
 	    map.drawSimpleStructuralFeature(f,fi,y,height,f.name);  
 	}
     };
 
     map.descendStructureTier = function(node,y,height,topPrefix,currentDepth,maxDepth) {
+	// Either draw given structural level node or descend a level deeper depending on current zoom level.
 	if ( currentDepth === maxDepth ) {
 	    map.drawTieredStructure(node,node.children,y,height,topPrefix);
 	} else {
@@ -329,7 +322,7 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	// hack for now to limit to 4 until you figure out what is going on with some tei shakespeare.
 	var bottomLevel = hb.structureLevels.length < 5 ? hb.structureLevels.length : 4;
 	for ( var i = bottomLevel; i > 0; i-- ) {
-	    if ( map.pxPerChar() > (hb.structureLevels[i] / (hb.sequence.length/6)) ) {
+	    if ( map.pxPerChar() > (hb.structureLevels[i] / (hb.sequence.length/8)) ) {
 		return i;
 	    }
 	}
