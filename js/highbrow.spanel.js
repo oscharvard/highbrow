@@ -366,7 +366,7 @@ var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
 	    var spa = row.sn.start + c.start;
 	    var spz = row.sn.start + c.stop;
 	    var heatmapData  = ' data-spa="'+ spa +'" data-spz="' + spz +'" ';
-	    var heatmapTitle =  " title=\"chunk:" + c.start + ":" + c.stop + " (" + c.score + ") " + color + "\" ";
+	    var heatmapTitle =  ""; //" title=\"chunk:" + c.start + ":" + c.stop + " (" + c.score + ") " + color + "\" ";
 	    heatmapText+='<span ' + heatmapData + heatmapTitle + " style=\"background: " + color + "; \">";
 	    heatmapText+=row.textString.substr(c.start,hb.len(c));
 	    heatmapText+="</span>";
