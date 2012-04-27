@@ -77,6 +77,11 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.attachListeners();
     };
 
+    hb.login = function(user){
+	hb.user = user;
+	hb.ePanel = new HighbrowNoteEditor(hb,conf);
+    };
+
     hb.attachListeners = function(){
 	$("#" + hb.prefix + "zoomIn").click(function(e){  hb.map.zoomIn()   ; e.preventDefault(); });
 	$("#" + hb.prefix + "zoomOut").click(function(e){ hb.map.zoomOut()   ; e.preventDefault(); });
