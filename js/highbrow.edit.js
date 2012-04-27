@@ -137,7 +137,7 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
     var updateEditSelection = function(){
 	$("#HB_editStartDisplay").html(editor.editStart);
 	$("#HB_editStopDisplay").html(editor.editStop);
-	$("#HB_editText").html( '<pre>&#8220;' + sequence.data.substr(editor.editStart,(editor.editStop-editor.editStart)+1)  + '&#8221;</pre>');
+	$("#HB_editText").html( '<pre>&#8220;' + sequence.data.substr(editor.editStart-1,(editor.editStop-editor.editStart)+1)  + '&#8221;</pre>');
     };
 
     var queueSave= function(verb,type,object,context){
