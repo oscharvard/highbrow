@@ -21,7 +21,7 @@ var Highbrow = this.Highbrow = function(conf) {
 
     // initialization and data munging methods.
 
-    hb.validateConf = function(){
+    var validateConf = function(){
 	// make sure we have required configuration parameters.
 	// set defaults for optional parameters.
 	if (! (conf.container)) { throw "no container div id provided!"; }
@@ -54,48 +54,49 @@ var Highbrow = this.Highbrow = function(conf) {
 	conf.intro='';
     };
 
-    hb.init = function() {
-	hb.validateConf();
-	hb.createHighbrowDiv();
+    var init = function() {
+	validateConf();
+	createHighbrowDiv();
 	// these constants should be put somewhere else.
 	hb.RED  = [206,15,37];
 	hb.GOLD = [207,181,59]; //[245,217,77];
 	hb.BLUE = [19,83,180];
 	hb.noteMarkMode = conf.noteMarkMode;
-	hb.initSequence(conf.sequence);
+	initSequence(conf.sequence);
 	hb.map = new HighbrowMap(hb,conf);	
 	hb.map.initProcessing();
 	hb.name = "Highbrow.js Instance";
-	hb.initTracks(conf.tracks,conf.groups,conf.structure);
+	initTracks(conf.tracks,conf.groups,conf.structure);
 	hb.sPanel   = new HighbrowSequencePanel(hb,conf);
 	hb.nPanel   = new HighbrowNotesPanel(hb,conf);
 	hb.settingsDialog = new HighbrowSettingsDialog(hb,conf);
 	hb.searchDialog = new HighbrowSearchDialog(hb,conf);
+	hb.editor = null;
 	//hb.eDialog = new HighbrowEditDialog(hb,conf);
-	hb.adjustBounds();
-	hb.updateNavState();
-	hb.attachListeners();
+	adjustBounds();
+	updateNavState();
+	attachListeners();
     };
 
     hb.login = function(user){
 	hb.user = user;
-	hb.ePanel = new HighbrowNoteEditor(hb,conf);
+	hb.editor = new HighbrowNoteEditor(hb,conf);
     };
 
-    hb.attachListeners = function(){
+    var attachListeners = function(){
 	$("#" + hb.prefix + "zoomIn").click(function(e){  hb.map.zoomIn()   ; e.preventDefault(); });
 	$("#" + hb.prefix + "zoomOut").click(function(e){ hb.map.zoomOut()   ; e.preventDefault(); });
 	$("#" + hb.prefix + "panLeft").click(function(e)  { hb.map.panLeft()  ; e.preventDefault(); });
 	$("#" + hb.prefix + "panRight").click(function(e) { hb.map.panRight() ; e.preventDefault(); });
 	$(window).resize(function() {
-		hb.adjustBounds();
+		adjustBounds();
 	    });
 	$(window).bind( 'hashchange', function(){
 		hb.updateNavState();
 	    });
     };
     
-    hb.updateNavState = function(){
+    var updateNavState = function(){
 	var fragment = $.deparam.fragment();
 	var sid = fragment.select ? fragment.select : "";
 	var zid = fragment.zoom   ? fragment.zoom : ""; // could be multiple.
@@ -115,17 +116,17 @@ var Highbrow = this.Highbrow = function(conf) {
 	}
     };
     
-    hb.buildSectionById = function(sections){
+    var buildSectionById = function(sections){
 	// create map so we can quickly look up sections by id for selection and zooming in url.
 	$.each(sections, function(index, section) {
 		hb.sectionById[section.id]=section;
 		if ( section.hasOwnProperty("children") ) {
-		    hb.buildSectionById(section.children);
+		    buildSectionById(section.children);
 		}
 	    });
     };
 
-    hb.initSequence = function(sequence){
+    var initSequence = function(sequence){
 	hb.sequence = sequence;
 	hb.sequence.length *= 1.0;
 	if ( sequence.type === "video" ) {
@@ -136,7 +137,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	}
     };
 
-    hb.initTracks = function(tracks,groups,structure){
+    var initTracks = function(tracks,groups,structure){
 	hb.tracks = tracks;
 	hb.groups = groups;
 	hb.structure = structure;
@@ -157,7 +158,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	    structure[si].type="structure";
 	    tracks.unshift(structure[si]);
 	    hb.sectionById={};
-	    hb.buildSectionById(structure[si].notes);
+	    buildSectionById(structure[si].notes);
 	    hb.structureLevels = [];
 	    hb.countStructureLevels(structure[si].notes,0,hb.structureLevels);
 	    hb.cleanStructureLevels(structure[si]);
@@ -341,7 +342,11 @@ var Highbrow = this.Highbrow = function(conf) {
 	    z = temp;
 	}
 	a++;
-	alert("Editing range " + a + "-" + z + ":\n'" + hb.getRawSequence(a,z) + "'") ;
+	if ( hb.editor ) {
+	    hb.editor.edit({'start':a,'stop':z});
+	} else {
+	    alert("No editable tracks. But just in case you're curious, you selected range " + a + "-" + z + ":\n'" + hb.getRawSequence(a,z) + "'") ;
+	}
     };
 
     hb.notecount = function(track){
@@ -392,7 +397,7 @@ var Highbrow = this.Highbrow = function(conf) {
 
     // bounds adjustment to fill screen (should be optional)
 
-    hb.adjustBounds = function(){
+    var adjustBounds = function(){
 	var windowWidth = $(window).innerWidth();
 	var windowHeight = $(window).innerHeight();
 
@@ -435,7 +440,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	$(hb.nPanel.element).width(half);
     };
 
-    hb.createHeaderPanel = function(){
+    var createHeaderPanel = function(){
 	// todo. does too much. get rid of table stuff. should image stuff even be here? no.
 	var html = '<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 3px;"><tr><td><!-- 2 columns, 1= misc nav and title, images. 2= login link -->';
 	html+='<table border="0" cellpadding="0" cellspacing="0" class="' + hb.prefix+ 'w" id="' + hb.prefix + 'header">';
@@ -470,10 +475,10 @@ var Highbrow = this.Highbrow = function(conf) {
 	return html;
     };
 
-    hb.createHighbrowDiv = function(){
+    var createHighbrowDiv = function(){
 	var html = "";
 	html+="\n<div id=\"" + hb.prefix + "panel\">\n";
-	html+=hb.createHeaderPanel();
+	html+=createHeaderPanel();
 	html+="<canvas id=\"" + hb.prefix + "mapPanel\" width=\"1000px\" height=\"100px\"></canvas>\n";
 	html+="<div id=\"" + hb.prefix + "bottomSelectionPanel\" style=\"width:870px; height:400px;float:left;\">\n";
 	html+="<div id=\"" + hb.prefix + "sequenceHeader\" style=\"width:50%;float:left;text-align:center;font-weight: bold;padding-top: 5px\">Section</div>\n";
@@ -559,5 +564,5 @@ var Highbrow = this.Highbrow = function(conf) {
 	return JSON.stringify(object,null,2);
     };
 
-    hb.init();
+    init();
 };
