@@ -8,18 +8,19 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
     var pendingSaves = [];
     //alert("Hi Edit");
 
-    var cloneObject = function(source,seedKey,ignoreKeys) {
+    var selectiveClone = function(source,seedKey,ignoreKeys) {
 	// hack. must be better way. no time.
 	// processing.js seems to be doing something weird with JSON.stringify.
 	// we need to instantiate the object with a seedKey or JSON.stringify
 	// returns empty array. suspect strange processing.js interaction.
 	// one more reason to get out of this weird hybrid situation.
+	// todo: is this still necessary?
 	var target = { "id" : source.id };
-	for (key in source) {
-	    if ( key !== seedKey && ($.inArray(key,ignoreKeys) === -1) ) {
-		target[key] = source[key];
-	    }
-	}
+	$.each(source, function(key, value) { 
+		if ( key !== seedKey && ($.inArray(key,ignoreKeys) === -1) ) {
+		    target[key] = source[key];
+		}
+	    });
 	return target;
     };
     
@@ -50,7 +51,7 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 	    }
 	    //alert("Command: " + command.verb);
 	    if ( command.verb==="replace"){
-		var meta = cloneObject(ps.object,"id",ignoreKeys);
+		var meta = selectiveClone(ps.object,"id",ignoreKeys);
 		//alert("meta id: " + meta.id);
 		//alert("meta(a): " + JSON.stringify(meta,null,2));
 		if ( ps.type === "note" && ps.context ) {
@@ -61,11 +62,12 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 	    commands.push(command);
 	}
 	if ( commands.length > 0 ) {
+	    //alert("sending following to server: commands=" +  JSON.stringify(commands,null,2));
 	    $.ajax({
 		    type: 'POST',
 		    url: url,
 		    data: { "commands" : JSON.stringify(commands,null,2)},
-		    success: function(data, textStatus, jqXHR) { whisper("Your edits have been saved to the server.\nServer says:\n" + textStatus); },
+		    success: function(data, textStatus, jqXHR) { var alert="Your edits have been saved to the server.\nServer says:\n" + textStatus; },
 		    error: function(jqXHR, textStatus, errorThrown) { alert("Error saving edits to server.\nServer says:\nerrorThrown: \n" + errorThrown + "\ntextStatus:\n" + textStatus + "\njqXHR.reponseText: \n" + jqXHR.responseText); }
 		});
 	}
@@ -103,6 +105,7 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 			    t.notes.push(n);
 			}
 			queueSave("replace","note",n,t);
+			pushPendingSaves(); // why is this a 2 step process?
 			//updateSelectionPanel(selectedSN);
 			hb.sPanel.update();
 			jqd.dialog("close");
