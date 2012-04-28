@@ -9,6 +9,7 @@
 
 var Highbrow = this.Highbrow = function(conf) {
 
+
     // The Highbrow object represents the entire widget.  Composed of:
     // Map, Sequence Panel, Notes Panel (and possible additional data
     // managers)
@@ -73,7 +74,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.searchDialog = new HighbrowSearchDialog(hb,conf);
 	hb.editor = null;
 	//hb.eDialog = new HighbrowEditDialog(hb,conf);
-	adjustBounds();
+	hb.adjustBounds();
 	updateNavState();
 	attachListeners();
     };
@@ -89,7 +90,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	$("#" + hb.prefix + "panLeft").click(function(e)  { hb.map.panLeft()  ; e.preventDefault(); });
 	$("#" + hb.prefix + "panRight").click(function(e) { hb.map.panRight() ; e.preventDefault(); });
 	$(window).resize(function() {
-		adjustBounds();
+		hb.adjustBounds();
 	    });
 	$(window).bind( 'hashchange', function(){
 		hb.updateNavState();
@@ -397,7 +398,7 @@ var Highbrow = this.Highbrow = function(conf) {
 
     // bounds adjustment to fill screen (should be optional)
 
-    var adjustBounds = function(){
+    hb.adjustBounds = function(){
 	var windowWidth = $(window).innerWidth();
 	var windowHeight = $(window).innerHeight();
 
@@ -510,8 +511,8 @@ var Highbrow = this.Highbrow = function(conf) {
 	return t;
     };
 
-
     // crude html generation methods.
+    // todo: these break in strict mode because of "arguments" rethink.
 
     hb.tag = function(t,args){
 	var contents = "";
