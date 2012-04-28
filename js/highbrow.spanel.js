@@ -7,6 +7,7 @@ var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
 
     if (! (this instanceof HighbrowSequencePanel)) throw "called HighbrowSequencePanel constructor as if it were a function: missing 'new'.";
     var sPanel = this;
+    var curentSection, currentInspectTracks;
 
     sPanel.init = function() {
 	sPanel.hb = hb;
@@ -143,13 +144,16 @@ var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
     // build selection panel UI methods.
 
     sPanel.update = function(section,inspectTracks){
-	// todo: problem: this breaks down in several situations.
-	// 1. more than 3 levels of sections (actually, I think this is fixed now)
-	// 2. if sections are non contiguous -- what about the gaps?
+	// renders text for all "finest grain subsections" in specified section.
+	// todo: problem: 
+	// If sections are non contiguous -- what about the gaps?
+	// if no arguments give, use last. Remember current for reuse.
+	currentSection = typeof section !== 'undefined' ? section : currentSection;
+	currentInspectTracks = typeof inspectTracks !== 'undefined' ? inspectTracks : currentInspectTracks;
+	section = currentSection;
+	inspectTracks = currentInspectTracks;
 	var sectionNotes = {};
-	//var subSections  = section.children ? section.children : [ section ];
 	var subSections = sPanel.fillGaps(section,sPanel.getFinestGrainSubsections(section,[]));
-	//alert("Hiya, Rein. Got these subsections: " + hb.dump(subSections) + " for this section: " + hb.dump(section));
 	var sectionNotes = sPanel.buildSectionNotesMap(section,subSections,inspectTracks);	
 	var rows = sPanel.buildSelectionRows(subSections,sectionNotes )[0];
 	var html = "";
@@ -162,7 +166,6 @@ var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
 	$("#"+sPanel.element.id + " div").css("marginBottom","1px");
 	$("#"+sPanel.element.id + " div").css("marginTop","1px");
     };
-
 
     sPanel.fillGaps = function(range,subsections) {
 	// just pads on the front for now.
