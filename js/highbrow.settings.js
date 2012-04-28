@@ -108,22 +108,22 @@ var HighbrowSettingsDialog = this.HighbrowSettingsDialog = function(hb,conf) {
 		buttons:
 		{
 		    "New Track" : function() {
-			var t = initTrack();
+			var t = hb.initTrack();
 			t.name = "New Track";
 			t.id = "track"+hb.tracks.length;
 			t.type="notes";
 			t.notes=[];
-			addTrack(t);
-			queueSave("replace","track",t,t);
+			hb.addTrack(t);
+			hb.editor.queueSave("replace","track",t,t);
 			alert("Created new track " + t.name);
 		    },
 		    "New Group" : function() {
-			var g = initTrack();
+			var g = hb.initTrack();
 			g.name = "New Group";
 			g.id = "group"+hb.tracks.length;
 			g.type="group";
 			g.trackIds=[];
-			addTrack(g);
+			hb.addTrack(g);
 			alert("Created new group " + g.name);
 		    },
 		    "Apply": function()  {

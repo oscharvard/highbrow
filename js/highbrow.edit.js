@@ -104,8 +104,7 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 			    n.created  = Date.now();
 			    t.notes.push(n);
 			}
-			queueSave("replace","note",n,t);
-			pushPendingSaves(); // why is this a 2 step process?
+			editor.queueSave("replace","note",n,t);
 			//updateSelectionPanel(selectedSN);
 			hb.sPanel.update();
 			jqd.dialog("close");
@@ -147,13 +146,14 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 	$("#HB_editText").html( '<pre>&#8220;' + sequence.data.substr(editor.editStart-1,(editor.editStop-editor.editStart)+1)  + '&#8221;</pre>');
     };
 
-    var queueSave= function(verb,type,object,context){
+    editor.queueSave= function(verb,type,object,context){
 	var save = { "verb" : verb };
 	//alert("queueing save of type : " + type);
 	save.type = type;
 	save.object = object;
 	save.context = context;
 	pendingSaves.push( save );
+	pushPendingSaves(); // why is this a 2 step process?
     };
 
     var updateTrackSelector = function(defaultTrackId){
