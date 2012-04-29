@@ -77,13 +77,13 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 
     var initDialog = function(){
 	var html="";
-	var trackSelector = '<select id="HB_trackSelector" style="align: right;"></select>';
-	html+= "<form id=\"HB_editForm\">";
-	html+='Annotating from position <span><a onclick="return hb.editor.nudge(0,-1);" href="">&lt;</a> <span id="HB_editStartDisplay"></span> <a onclick="return hb.editor.nudge(0,1);" href="">&gt;</a> to  <a onclick="return hb.editor.nudge(1,-1);" href="">&lt;</a> <span id="HB_editStopDisplay"></span>  <a onclick="return hb.editor.nudge(1,1);" href="">&gt;</a></span><span id="HB_editText"></span>';
-	html+="<div> <input type=\"text\" id=\"HB_editNoteTitle\" style=\"width: 300px;\" value=\"Untitled Note\">"+"</input> " + trackSelector + "</div>";
-	html+="<div><textarea class=\"jquery_ckeditor\" style=\"width:600px;\" id=\"HB_editNoteContent\">"+"</textarea></div>";
-	html+= "</form>";
-	jqd = $('<div class="HB_misc"></div>')
+	var trackSelector = '<select id="' + hb.prefix +'trackSelector" style="align: right;"></select>';
+	html+= '<form id="' + hb.prefix + 'editForm">';
+	html+='Annotating from position <span><a data-dir="0" data-delta="-1" href="">&lt;</a> <span id="' + hb.prefix + 'editStartDisplay"></span> <a data-dir="0" data-delta="1" href="">&gt;</a> to  <a data-dir="1" data-delta="-1" href="">&lt;</a> <span id="' + hb.prefix + 'editStopDisplay"></span>  <a data-dir="1" data-delta="1" href="">&gt;</a></span><span id="' + hb.prefix + 'editText"></span>';
+	html+='<div> <input type="text" id="' + hb.prefix + 'editNoteTitle" style="width: 300px;" value="Untitled Note"></input> ' + trackSelector + '</div>';
+	html+='<div><textarea class="jquery_ckeditor" style="width:600px;" id="' + hb.prefix + 'editNoteContent">"+"</textarea></div>';
+	html+= '</form>';
+	jqd = $('<div class="'+hb.prefix+'misc" id="'+hb.prefix+'editor"></div>')
 	.html(html)
 	.dialog({
 		autoOpen: false,
@@ -93,13 +93,13 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 		buttons:
 		{
 		    "Done" : function() {
-			var t = hb.trackById[ $('#HB_trackSelector').val() ];
+			var t = hb.trackById[ $('#' + hb.prefix + 'trackSelector').val() ];
 			editor.lastEditedTrackId = t.id;
 			var n = { "start" : editor.editStart };
 			n.stop     = editor.editStop;
 			n.id       = editor.editId ? editor.editId : (t.id + "_" + hb.notecount(t)+1);
-			n.content  = $('#HB_editNoteContent').val();
-			n.title    = $('#HB_editNoteTitle').val();
+			n.content  = $('#' + hb.prefix + 'editNoteContent').val();
+			n.title    = $('#' + hb.prefix + 'editNoteTitle').val();
 			n.updated = Date.now();
 			if (  ! editor.editId ) {
 			    n.created  = Date.now();
@@ -118,6 +118,17 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 	$('.jquery_ckeditor').ckeditor(config);
     };
 
+    var attachListeners = function(){
+	$("#"+hb.prefix+"editor").on("click","a",function(event){
+		// adjust bounds of annotated region.
+		event.preventDefault();
+		var direction = parseInt(event.target.getAttribute('data-dir'));
+		var delta = parseInt(event.target.getAttribute('data-delta'));
+		//alert("nudge: " + direction + "," + delta);
+		editor.nudge(direction,delta);
+	    });
+    };
+
     var updateEditDialog = function(note){
 	// fill in note edit fields with current note values (or clear).
 	editor.editStart = note.start;
@@ -126,14 +137,14 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 	if ( note.id ) {
 	    // editing existing note.
 	    editor.editId = note.id;
-	    $("#HB_editNoteTitle").val( note.title );
-	    $("#HB_editNoteContent").val( note.content );
+	    $('#' + hb.prefix + 'editNoteTitle').val( note.title );
+	    $('#' + hb.prefix + 'editNoteContent').val( note.content );
 	    defaultTrackId = note.track.id;
 	} else {
 	    // editing empty (new) note.
-	    editor.editId="";
-	    $("#HB_editNoteTitle").val( "Untitled Note" );
-	    $("#HB_editNoteContent").val( "" );
+	    editor.editId='';
+	    $('#' + hb.prefix + 'editNoteTitle').val( 'Untitled Note' );
+	    $('#' + hb.prefix + 'editNoteContent').val( '' );
 	    defaultTrackId = editor.lastEditedTrackId;
 	}
 	updateEditSelection();
@@ -141,9 +152,9 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
     };
 
     var updateEditSelection = function(){
-	$("#HB_editStartDisplay").html(editor.editStart);
-	$("#HB_editStopDisplay").html(editor.editStop);
-	$("#HB_editText").html( '<pre>&#8220;' + sequence.data.substr(editor.editStart-1,(editor.editStop-editor.editStart)+1)  + '&#8221;</pre>');
+	$('#' + hb.prefix + 'editStartDisplay').html(editor.editStart);
+	$('#' + hb.prefix + 'editStopDisplay').html(editor.editStop);
+	$('#' + hb.prefix + 'editText').html( '<pre>&#8220;' + sequence.data.substr(editor.editStart-1,(editor.editStop-editor.editStart)+1)  + '&#8221;</pre>');
     };
 
     editor.queueSave= function(verb,type,object,context){
@@ -153,7 +164,7 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 	save.object = object;
 	save.context = context;
 	pendingSaves.push( save );
-	pushPendingSaves(); // why is this a 2 step process?
+	pushPendingSaves(); // why is this a 2 step process? I guess so we could batch them at some point.
     };
 
     var updateTrackSelector = function(defaultTrackId){
@@ -165,7 +176,7 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 	    }
 	    html+= '">' + hb.editableTracks[i].name + '</option>\n';
 	}
-	$('#HB_trackSelector').html(html);
+	$('#' + hb.prefix + 'trackSelector').html(html);
     };
 
     editor.nudge = function(direction, delta){
@@ -185,7 +196,7 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
     };
 
     initDialog();
-
+    attachListeners();
 };
 
 

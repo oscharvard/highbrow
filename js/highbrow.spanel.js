@@ -19,7 +19,7 @@ var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
 
 
     sPanel.showHelp = function() {
-	$(sPanel.element).html('<p class="HB_panelHelp">Click on a section above to inspect it here.</p>');    
+	$(sPanel.element).html('<p class="'+hb.prefix+'_panelHelp">Click on a section above to inspect it here.</p>');    
     };
 
     // sequence annotation range selection methods.
