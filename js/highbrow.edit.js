@@ -62,11 +62,12 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 	    commands.push(command);
 	}
 	if ( commands.length > 0 ) {
-	    //alert("sending following to server: commands=" +  JSON.stringify(commands,null,2));
+	    var commandsJSON = JSON.stringify(commands,null,2)
+	    alert("sending following to server: commands=" +  commandsJSON +"\n"+url+"?commands="+escape(commandsJSON));
 	    $.ajax({
 		    type: 'POST',
 		    url: url,
-		    data: { "commands" : JSON.stringify(commands,null,2)},
+		    data: { "commands" : commandsJSON},
 		    success: function(data, textStatus, jqXHR) { var alert="Your edits have been saved to the server.\nServer says:\n" + textStatus; },
 		    error: function(jqXHR, textStatus, errorThrown) { alert("Error saving edits to server.\nServer says:\nerrorThrown: \n" + errorThrown + "\ntextStatus:\n" + textStatus + "\njqXHR.reponseText: \n" + jqXHR.responseText); }
 		});
@@ -105,7 +106,6 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 			    t.notes.push(n);
 			}
 			editor.queueSave("replace","note",n,t);
-			//updateSelectionPanel(selectedSN);
 			hb.sPanel.update();
 			jqd.dialog("close");
 		    }

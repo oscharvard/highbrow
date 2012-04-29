@@ -73,7 +73,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.settingsDialog = new HighbrowSettingsDialog(hb,conf);
 	hb.searchDialog = new HighbrowSearchDialog(hb,conf);
 	hb.editor = null;
-	//hb.eDialog = new HighbrowEditDialog(hb,conf);
+	hb.editService = conf.editService;
 	hb.adjustBounds();
 	updateNavState();
 	attachListeners();
