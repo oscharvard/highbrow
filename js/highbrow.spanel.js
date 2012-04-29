@@ -1,6 +1,8 @@
 
 var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
 
+    //"use strict";
+
     // Shows sequence corresponding to selected structure note.
     // Allows region region to be selected for display of overlapping notes in note panel
     // or adding new note.

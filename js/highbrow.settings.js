@@ -1,6 +1,8 @@
 
 var HighbrowSettingsDialog = this.HighbrowSettingsDialog = function(hb,conf) {
 
+    "use strict;"
+
     if (! (this instanceof HighbrowSettingsDialog)) throw "called HighbrowSettingsDialog constructor as if it were a function: missing 'new'.";
 
     var ttId    = hb.prefix + "tt"; // track table

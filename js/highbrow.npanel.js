@@ -1,5 +1,6 @@
 
 var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
+    "use strict";
     if (! (this instanceof HighbrowNotesPanel)) throw "called HighbrowNotesPanel constructor as if it were a function: missing 'new'.";
     var nPanel = this;
     nPanel.element = document.getElementById(conf.notesPanel);

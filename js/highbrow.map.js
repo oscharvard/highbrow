@@ -1,6 +1,8 @@
 
 var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 
+    "use strict";
+
     // graphic that consists of a plot and label column.
 
     if (! (this instanceof HighbrowMap)) throw "called HighbrowMap constructor as if it were a function: missing 'new'.";
