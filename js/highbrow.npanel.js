@@ -3,6 +3,9 @@ var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
     "use strict";
     if (! (this instanceof HighbrowNotesPanel)) throw "called HighbrowNotesPanel constructor as if it were a function: missing 'new'.";
     var nPanel = this;
+
+    var notes=[];
+
     nPanel.element = document.getElementById(conf.notesPanel);
     nPanel.headerElement = document.getElementById(conf.notesHeader);
 
@@ -12,10 +15,31 @@ var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
 
     nPanel.showHelp();
 
+
+    var attachListeners = function(){
+	// reinos: before ian lunch. pasted from edit.js
+	$("#"+nPanel.element.id).on("click","a",function(event){
+		// adjust bounds of annotated region.
+		event.preventDefault();
+		var action    = event.target.getAttribute('data-action');
+		var noteIndex = parseInt(event.target.getAttribute('data-note'));
+		alert("action: " + action + ", noteIndex: " + noteIndex);
+		if ( action === 'edit' ) {
+		    hb.editor.editNote(notes[noteIndex]);
+		} else if ( action === 'delete' ) {
+		    hb.editor.deleteNote(notes[noteIndex]);
+		} else {
+		    throw "Unknown data-action: " + action;
+		}
+		//editor.nudge(direction,delta);
+	    });
+    };
+
+
     nPanel.showSpNotes = function(sp) {
 	//$(nPanel.element).html("Will show notes at sp: " + sp);
 	var html = "<ul>";
-	var notes = hb.getNotes(hb.getInspectableTracks(),{ start: sp, stop: sp });
+	notes = hb.getNotes(hb.getInspectableTracks(),{ start: sp, stop: sp });
 	var spa = sp;
 	var spz = sp;
 	$.each(notes, function(index, n) {
@@ -36,7 +60,7 @@ var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
 		var title   = n.title   ? (n.title + "<br/>")  : "";
 		var editLink = "";
 		if ( n.track.editable ) {
-		    editLink = '<div>[ <a href="" onclick="HB.editNote(' + visEditNotes.length + '); return false;">edit</a> | <a href="" onclick="HB.deleteNote(' + visEditNotes.length + '); return false;">delete</a> ]</div>';
+		    editLink = '<div>[ <a href="" data-action="edit" data-note="' + index + '">edit</a> | <a href="" data-action="delete" data-note="' + index + '">delete</a> ]</div>';
 		    visEditNotes.push(n);
 
 		}
@@ -53,4 +77,5 @@ var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
 	return { start: spa, stop: spz };
     };
 
+    attachListeners();
 };

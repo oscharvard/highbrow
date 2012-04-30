@@ -159,7 +159,7 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 
     editor.queueSave= function(verb,type,object,context){
 	var save = { "verb" : verb };
-	//alert("queueing save of type : " + type);
+	alert("queueing save of type : " + type);
 	save.type = type;
 	save.object = object;
 	save.context = context;
@@ -189,10 +189,14 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 	return false;
     };
 
-    editor.edit = function(note){
+    editor.editNote = function(note){
 	jqd.dialog('open');
 	updateEditDialog(note);
 	return false;
+    };
+    
+    editor.deleteNote = function(note){
+	editor.queueSave("delete","note",note,note.track);	
     };
 
     initDialog();

@@ -344,7 +344,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	}
 	a++;
 	if ( hb.editor ) {
-	    hb.editor.edit({'start':a,'stop':z});
+	    hb.editor.editNote({'start':a,'stop':z});
 	} else {
 	    alert("No editable tracks. But just in case you're curious, you selected range " + a + "-" + z + ":\n'" + hb.getRawSequence(a,z) + "'") ;
 	}
