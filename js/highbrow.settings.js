@@ -81,7 +81,7 @@ var HighbrowSettingsDialog = this.HighbrowSettingsDialog = function(hb,conf) {
     { "sTitle": "id", "bVisible" : false, "width" : "0px" },
     { "width" : "100px", "sTitle": "Show?", "fnRender": function(cell) { return hb.cb( cell.aData[1], { "id" : "cb"+cell.aData[0] }); } },
     { "width" : "100px", "sTitle": "Order" },
-    { "width" : "200px", "sTitle": "Name", "fnRender": function(cell) { return "<span onclick=\"HB.makeTrackNameEditable(event,'" + cell.aData[0] + "'," + cell.iDataRow + "," + cell.iDataColumn + ")\">" + cell.aData[3] + "</span>"; } },
+    { "width" : "200px", "sTitle": "Name", "fnRender": function(cell) {  return '<span class="'+hb.prefix+'trackTitle" data-track="'+ cell.aData[0] +'" data-row="' + cell.iDataRow + '" data-col="' + cell.iDataColumn + '">' + cell.aData[3] + '</span>'; } },
     { "width" : "200px", "sTitle": "Type", "fnRender": function(cell) { return groupLink(cell.aData[0]);}},
     { "width" : "200px", "sTitle": "Notes" }
 		     ];
@@ -91,7 +91,65 @@ var HighbrowSettingsDialog = this.HighbrowSettingsDialog = function(hb,conf) {
 	$("#"+hb.prefix + "showSettingsDialog").click(function(e) { showTT() ; e.preventDefault(); });
 	initTT();
 	initTTJQD();
+	attachListeners();
     };
+
+    var attachListeners = function(){
+	var selector = '.' + hb.prefix +'trackTitle';
+	$("#"+ttDivId).on("click",selector,function(event){
+		// make clicked title editable.
+		event.preventDefault();
+		var target = event.target;
+		var trackId = target.getAttribute('data-track');
+		if ( ! trackId ) {
+		    return;
+		}
+		var row = target.getAttribute('data-row');
+		var col = target.getAttribute('data-col');
+		var track = hb.trackById[trackId];
+		event.target.innerHTML = tag('input', 
+					     {'type': 'text',
+					      'value': track.name, 
+					      'data-track': trackId,
+					      'data-row':row,
+					      'data-col':col
+					     });   
+	    });
+	$("#"+ttDivId).on("blur",selector+" input",function(event){
+		updateTrackName(event);
+	    });
+	$("#"+ttDivId).on("keydown",selector+" input",function(event){
+		hb.event=event;
+		if ( event.keyCode === 13 ) {
+		    updateTrackName(event);
+		}
+	    });
+    };
+
+    var updateTrackName = function(event){
+	var target = event.target;
+	var trackId = target.getAttribute('data-track');
+	var row = target.getAttribute('data-row');
+	var col = target.getAttribute('data-col');
+	var track = hb.trackById[trackId];
+	var t = hb.trackById[trackId];
+	t.name = target.value;
+	$('#'+ttId).dataTable().fnUpdate( t.name, row, col );
+	hb.editor.queueSave("replace","track",t,t);
+    };
+
+    var tag = function(name,attributes,text){
+	var html='<'+name;
+	$.each(attributes, function(key,value) {
+		html+= ' ' + key + ' = ' + '"' + value + '"'; 
+	    });
+	if ( text !== undefined) {
+	    html += text + '</' + name + '>';
+	} else {
+	    html += ' />';
+	}
+	return html;
+    }; 
 
     var initTTJQD = function(){
 	// initialized track table jquery dialog widget.

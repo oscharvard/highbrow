@@ -52,6 +52,9 @@ a {
     margin-top: 50px;
 }
 
+#HB_title_r {
+    text-align: right;
+};
 
 // Datatables stuff.
 // theme roller doesn't quite cut it.

@@ -451,12 +451,12 @@ var Highbrow = this.Highbrow = function(conf) {
 	}
 	html+='</td>';
 	html+='<td class="' + hb.prefix + 'w2">';
-	html+='<div class="' + hb.prefix + 'title">'+ hb.title + '</div>';
+	html+='<div id="' + hb.prefix + 'title" class="' + hb.prefix + 'title">'+ hb.title + '</div>';
 	if ( hb.subtitle ) {
 	    html+='<div class="' + hb.prefix + 'title">'+ hb.subtitle +'/div>';
 	}
 	html+='</td> ';
-	html+='<td class="' + hb.prefix + 'w4"> ';
+	html+='<td id="'+ hb.prefix +'title_r" class="' + hb.prefix + 'w4"> ';
 	if ( hb.rightimage ) {
 	    html+='<img src="../images/right.png" align="right" height="50" />';
 	}
