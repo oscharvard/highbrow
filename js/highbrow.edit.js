@@ -63,7 +63,7 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 	}
 	if ( commands.length > 0 ) {
 	    var commandsJSON = JSON.stringify(commands,null,2)
-	    alert("sending following to server: commands=" +  commandsJSON +"\n"+url+"?commands="+escape(commandsJSON));
+	    //alert("sending following to server: commands=" +  commandsJSON +"\n"+url+"?commands="+escape(commandsJSON));
 	    $.ajax({
 		    type: 'POST',
 		    url: url,
@@ -159,7 +159,7 @@ var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
 
     editor.queueSave= function(verb,type,object,context){
 	var save = { "verb" : verb };
-	alert("queueing save of type : " + type);
+	//alert("queueing save of type : " + type);
 	save.type = type;
 	save.object = object;
 	save.context = context;
