@@ -138,6 +138,19 @@ var Highbrow = this.Highbrow = function(conf) {
 	}
     };
 
+    var initAutoAllGroup = function(){
+	var group = { 'trackIds': [], 'id': 'auto_all', 'name': 'All Commentators', 'notecount':0, 'visible': true };
+	hb.groups.unshift(group);
+	for (var i=0; i< tracks.length; i++ ) {
+	    var track = tracks[i];
+	    group.trackIds.push(track.id);
+	    //alert("Hello Bug A. group.notecount: " + track.id + ":" + group.notecount);
+	    //alert("Hello Bug B. track notecount: " + notecount(track));
+	    group.notecount += hb.notecount(track);
+	}
+	//alert("Hi Reinhard. Don't be Lazy:" + trackIds.length);
+    };
+
     var initTracks = function(tracks,groups,structure){
 	hb.tracks = tracks;
 	hb.groups = groups;
@@ -147,6 +160,8 @@ var Highbrow = this.Highbrow = function(conf) {
 	if ( hb.sequence.type === "video" ) {
 	    hb.positionDurationNotes();
 	}
+	initAutoAllGroup();
+
 	// add track groups to tracks. also rethink as with structure.
 	for (var gi=groups.length-1; gi > -1; gi-- ) {
 	    groups[gi].type="group";
