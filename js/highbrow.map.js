@@ -347,7 +347,10 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	var visibleRegion = stop - start +1;
 	var x = (start + stop) /2;
 	map.p.rect( start, y-h, stop-start+1, h-1 );
-	if ( visibleRegion > 4.1*label.length ) {
+	while ( visibleRegion <= 7*label.length ) {
+	    label=label.substr(0,label.length-1);
+	}
+	if ( (visibleRegion > 7*label.length && label.length > 0)) {
 	    map.p.stroke(0);
 	    map.p.fill(0);
 	    // todo: fix substring visible chars.
