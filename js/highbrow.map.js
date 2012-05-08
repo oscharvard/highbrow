@@ -347,6 +347,13 @@ var HighbrowMap = this.HighbrowMap = function(hb,conf) {
 	var visibleRegion = stop - start +1;
 	var x = (start + stop) /2;
 	map.p.rect( start, y-h, stop-start+1, h-1 );
+	
+	if ( f.hasOwnProperty('abbr') ) {
+	    if ( visibleRegion <= 7*label.length ) {
+		label = f.abbr;
+	    }
+	}
+
 	while ( visibleRegion <= 7*label.length ) {
 	    label=label.substr(0,label.length-1);
 	}

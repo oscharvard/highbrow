@@ -192,7 +192,7 @@ var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
 
     sPanel.updateHeader = function(section){
 	// todo: displaying id is nasty. should join names of this and all parent sections instead.
-	sPanel.headerElement.innerHTML= "" + section.id;//name;
+	sPanel.headerElement.innerHTML= "" + hb.structure[0].name + " " + section.id;//name;
     };
 
     sPanel.updateHtml = function(html){
