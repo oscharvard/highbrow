@@ -81,6 +81,10 @@ var Highbrow = this.Highbrow = function(conf) {
     hb.login = function(user){
 	hb.user = user;
 	hb.editor = new Highbrow.NoteEditor(hb,conf);
+	if ( hb.editableTracks.length === 0 ) {
+	    alert("creating new track...");
+	    hb.createOrdinaryTrack();
+	}
     };
 
     var attachListeners = function(){
@@ -525,7 +529,20 @@ var Highbrow = this.Highbrow = function(conf) {
 	return t;
     };
 
-    // crude html generation methods.
+    hb.createOrdinaryTrack = function(){
+	var t={};
+	t.name = hb.user ? hb.user.name + "'s Notes" : "New Track";	
+	t.id = "t_"+ hb.user.uid + "_" + new Date().getTime();
+	t.user = hb.user;
+	t.editable = true;
+	t.type="notes";
+	t.sharing=2;
+	t.notes=[];
+	hb.addTrack(t);
+	hb.editor.queueSave("replace","track",t,t);
+    };
+
+    // Crude html generation methods.
     // todo: these break in strict mode because of "arguments" rethink.
 
     hb.tag = function(t,args){

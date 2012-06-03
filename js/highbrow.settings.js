@@ -168,17 +168,8 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
 		buttons:
 		{
 		    "New Track" : function() {
-			var t = hb.initTrack();
-			t.name = hb.user ? hb.user.name + "'s Notes" : "New Track";	
-			t.id = "t_"+ hb.user.uid + "_" + new Date().getTime();
-			t.user = hb.user;
-			t.editable = true;
-			t.type="notes";
-			t.sharing=2;
-			t.notes=[];
-			hb.addTrack(t);
-			hb.editor.queueSave("replace","track",t,t);
-			alert("Created new track " + t.name);
+			hb.createOrdinaryTrack();
+			//alert("Created new track " + t.name);
 		    },
 		    "New Group" : function() {
 			var g = hb.initTrack();
