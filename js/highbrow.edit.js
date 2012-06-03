@@ -1,8 +1,8 @@
-var HighbrowNoteEditor = this.HighbrowNoteEditor = function(hb,conf) {
+Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
     
     "use strict";
     
-    if (! (this instanceof HighbrowNoteEditor)) throw "called HighbrowNoteEditor constructor as if it were a function: missing 'new'.";
+    if (! (this instanceof Highbrow.NoteEditor)) throw "called Highbrow.NoteEditor constructor as if it were a function: missing 'new'.";
     var editor = this;
     var jqd = null; // jquery dialog object.
     var pendingSaves = [];

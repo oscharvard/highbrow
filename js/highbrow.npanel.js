@@ -1,7 +1,7 @@
 
-var HighbrowNotesPanel = this.HighbrowNotesPanel = function(hb,conf) {
+Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
     "use strict";
-    if (! (this instanceof HighbrowNotesPanel)) throw "called HighbrowNotesPanel constructor as if it were a function: missing 'new'.";
+    if (! (this instanceof Highbrow.NotesPanel)) throw "called Highbrow.NotesPanel constructor as if it were a function: missing 'new'.";
     var nPanel = this;
 
     var notes=[];

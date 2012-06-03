@@ -1,5 +1,5 @@
 
-var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
+Highbrow.SequencePanel = this.Highbrow.SequencePanel = function(hb,conf) {
 
     //"use strict";
 
@@ -7,7 +7,7 @@ var HighbrowSequencePanel = this.HighbrowSequencePanel = function(hb,conf) {
     // Allows region region to be selected for display of overlapping notes in note panel
     // or adding new note.
 
-    if (! (this instanceof HighbrowSequencePanel)) throw "called HighbrowSequencePanel constructor as if it were a function: missing 'new'.";
+    if (! (this instanceof Highbrow.SequencePanel)) throw "called Highbrow.SequencePanel constructor as if it were a function: missing 'new'.";
     var sPanel = this;
     var curentSection, currentInspectTracks;
 

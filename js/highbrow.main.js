@@ -9,7 +9,6 @@
 
 var Highbrow = this.Highbrow = function(conf) {
 
-
     // The Highbrow object represents the entire widget.  Composed of:
     // Map, Sequence Panel, Notes Panel (and possible additional data
     // managers)
@@ -64,14 +63,14 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.BLUE = [19,83,180];
 	hb.noteMarkMode = conf.noteMarkMode;
 	initSequence(conf.sequence);
-	hb.map = new HighbrowMap(hb,conf);	
+	hb.map = new Highbrow.Map(hb,conf);	
 	hb.map.initProcessing();
 	hb.name = "Highbrow.js Instance";
 	initTracks(conf.tracks,conf.groups,conf.structure);
-	hb.sPanel   = new HighbrowSequencePanel(hb,conf);
-	hb.nPanel   = new HighbrowNotesPanel(hb,conf);
-	hb.settingsDialog = new HighbrowSettingsDialog(hb,conf);
-	hb.searchDialog = new HighbrowSearchDialog(hb,conf);
+	hb.sPanel   = new Highbrow.SequencePanel(hb,conf);
+	hb.nPanel   = new Highbrow.NotesPanel(hb,conf);
+	hb.settingsDialog = new Highbrow.SettingsDialog(hb,conf);
+	hb.searchDialog = new Highbrow.SearchDialog(hb,conf);
 	hb.editor = null;
 	hb.editService = conf.editService;
 	hb.adjustBounds();
@@ -81,7 +80,7 @@ var Highbrow = this.Highbrow = function(conf) {
 
     hb.login = function(user){
 	hb.user = user;
-	hb.editor = new HighbrowNoteEditor(hb,conf);
+	hb.editor = new Highbrow.NoteEditor(hb,conf);
     };
 
     var attachListeners = function(){

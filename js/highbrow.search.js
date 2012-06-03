@@ -1,8 +1,8 @@
-var HighbrowSearchDialog = this.HighbrowSearchDialog = function(hb,conf) {
+Highbrow.SearchDialog = this.Highbrow.SearchDialog = function(hb,conf) {
 
     "use strict";
 
-    if (! (this instanceof HighbrowSearchDialog)) throw "called HighbrowSearchDialog constructor as if it were a function: missing 'new'.";
+    if (! (this instanceof Highbrow.SearchDialog)) throw "called Highbrow.SearchDialog constructor as if it were a function: missing 'new'.";
 
     var jqd = null; // jquery dialog object.
     var searchCount=0;
