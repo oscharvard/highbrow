@@ -96,12 +96,13 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 	};
 
 	p.mouseScrolled = function(){
+	    // mouse scrolling is more gradual than arrow scrolling.
 	    if ( map.mouseIsOver ) {
 		if ( p.mouseY < map.height ) {
 		    if ( p.mouseScroll < 0 ) {
-			map.zoomOut();
+			map.zoom(1.1);
 		    } else if ( p.mouseScroll > 0 ) {
-			map.zoomIn();
+			map.zoom(.909090909);
 		    }
 		}
 	    }
