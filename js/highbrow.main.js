@@ -82,7 +82,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.user = user;
 	hb.editor = new Highbrow.NoteEditor(hb,conf);
 	if ( hb.editableTracks.length === 0 ) {
-	    alert("creating new track...");
+	    //alert("creating new track...");
 	    hb.createOrdinaryTrack();
 	}
     };
@@ -530,7 +530,7 @@ var Highbrow = this.Highbrow = function(conf) {
     };
 
     hb.createOrdinaryTrack = function(){
-	var t={};
+	var t=hb.initTrack();
 	t.name = hb.user ? hb.user.name + "'s Notes" : "New Track";	
 	t.id = "t_"+ hb.user.uid + "_" + new Date().getTime();
 	t.user = hb.user;
