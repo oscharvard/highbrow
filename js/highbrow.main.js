@@ -96,7 +96,7 @@ var Highbrow = this.Highbrow = function(conf) {
 		hb.adjustBounds();
 	    });
 	$(window).bind( 'hashchange', function(){
-		hb.updateNavState();
+		updateNavState();
 	    });
     };
     
@@ -152,6 +152,10 @@ var Highbrow = this.Highbrow = function(conf) {
 	    group.notecount += hb.notecount(track);
 	}
 	//alert("Hi Reinhard. Don't be Lazy:" + trackIds.length);
+    };
+
+    hb.updateAutoAllGroup = function(){
+	
     };
 
     var initTracks = function(tracks,groups,structure){
