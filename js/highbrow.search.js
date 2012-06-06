@@ -51,13 +51,27 @@ Highbrow.SearchDialog = this.Highbrow.SearchDialog = function(hb,conf) {
     };
 
     var initDialog = function(){
+	var searchDialogId =  hb.prefix+'searchDialog';
+	var searchDialogFormId  = searchDialogId + "Form";
+	var searchDialogInputTextId  = searchDialogFormId + "InputText";
+	var searchDialogIgnoreCaseId = searchDialogFormId + "IgnoreCase";
+	var searchDialogRegexId = searchDialogFormId + "Regex";
+
+	$('body').on("submit",'#'+searchDialogFormId,function(event){
+	    event.preventDefault();
+	    search($('#'+searchDialogInputTextId).val(),hb.cbChecked('#'+searchDialogIgnoreCaseId),hb.cbChecked('#'+searchDialogRegexId));
+	    
+	});
+
 	var html ="<div class=\"hb_misc\"><p>Type a term to locate in the text.</p>";
-	html+= "<p>Your results will be plotted as a new track.</p>";
-	html+="<form><p><input id=\"sb\" type=\"text\" size=\"30\"/></p>";
-	html+="<p>Ignore Case?" + hb.cb(true,{"id" : "scase"}) + "</p>";
-	html+="<p>Regular Expression?" + hb.cb(false,{"id" : "sregexp"}) + "</p>";
+	html+= '<p>Your results will be plotted as a new track.</p>';
+	html+='<form id="'+ searchDialogFormId +'"><p><input id="' + searchDialogInputTextId + '" type="text" size="30"/></p>';
+	html+="<p>Ignore Case?" + hb.cb(true,{"id" : searchDialogIgnoreCaseId}) + "</p>";
+	html+="<p>Regular Expression?" + hb.cb(false,{"id" : searchDialogRegexId}) + "</p>";
 	html+="</form></div>";
-	jqd = $('<div class=\"hb_misc\"></div>')
+	jqd = $('<div id="' + searchDialogId + '" class=\"hb_misc\"></div>')
+
+
 	.html(html)
 	.dialog({
 		autoOpen: false,
@@ -67,10 +81,13 @@ Highbrow.SearchDialog = this.Highbrow.SearchDialog = function(hb,conf) {
 		buttons:
 		{
 		    "Search": function()  {
-			search($("#sb").val(),hb.cbChecked("#scase"),hb.cbChecked("#sregexp"));
+			$('#'+searchDialogFormId).submit();
+
 		    }
+		    
 		}
 	    });
+
     };
     
     init();
