@@ -74,8 +74,8 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.editor = null;
 	hb.editService = conf.editService;
 	hb.adjustBounds();
-	updateNavState();
 	attachListeners();
+	hb.linker = new Highbrow.Linker(hb,conf);
     };
 
     hb.login = function(user){
@@ -95,29 +95,6 @@ var Highbrow = this.Highbrow = function(conf) {
 	$(window).resize(function() {
 		hb.adjustBounds();
 	    });
-	$(window).bind( 'hashchange', function(){
-		updateNavState();
-	    });
-    };
-    
-    var updateNavState = function(){
-	var fragment = $.deparam.fragment();
-	var sid = fragment.select ? fragment.select : "";
-	var zid = fragment.zoom   ? fragment.zoom : ""; // could be multiple.
-	var spa = fragment.start ? fragment.start : "";
-	var spz = fragment.stop ? fragment.stop : "";
-	// noteSection ?
-	if ( sid ) {
-	    var s = hb.sectionById[sid];
-	    hb.selectSection(s);
-	}
-	if ( zid ) {
-	    // if zoom id is set, it overrides start and stop.
-	    var z = hb.sectionById[zid];
-	    hb.map.setVisibleRange(z.start,z.stop);
-	} else if ( spa && spz ) {
-	    hb.map.setVisibleRange(spa,spz);
-	}
     };
     
     var buildSectionById = function(sections){
@@ -464,10 +441,11 @@ var Highbrow = this.Highbrow = function(conf) {
     };
 
     var createHeaderPanel = function(){
-	// todo. does too much. get rid of table stuff. should image stuff even be here? no.
+	// todo. does too much. get rid of table stuff. should image stuff even be here? no. use template or something.
 	var html = '<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 3px;"><tr><td><!-- 2 columns, 1= misc nav and title, images. 2= login link -->';
-	html+='<table border="0" cellpadding="0" cellspacing="0" class="' + hb.prefix+ 'w" id="' + hb.prefix + 'header">';
-	html+='<tr><td class="' + hb.prefix + 'w4">';
+	html+='<table border="1" cellpadding="0" cellspacing="0" class="' + hb.prefix+ 'w" id="' + hb.prefix + 'header">';
+	html+='<td id="'+ hb.prefix +'title_l" class="' + hb.prefix + 'w4"> ';
+	html+='<a href="x" id="' + hb.prefix + 'showLinker">Link</a>';
 	if ( hb.leftimage ) {
 	    html+='<img src="' + hb.leftimage + '" align="left" height="50" style="margin-bottom: 2px;" /> ';
 	}
@@ -490,10 +468,6 @@ var Highbrow = this.Highbrow = function(conf) {
 	html+='<td id="' + hb.prefix + 'settingsBox"><a href="x" id="' + hb.prefix + 'showSettingsDialog">Settings</a></td>';
 	html+='</tr>';
 	html+='</table></td>';
-	// needs to be conditional.
-	if ( hb.loginlink ) {
-	    html+='<td><span class="' + hb.prefix + 'nav" style="margin: 15px;"> [ <a href="/user" id="' + hb.loginlink + '">login to edit</a> ]</span> </td>';
-	}
 	html+='</tr></table>';
 	return html;
     };
@@ -548,6 +522,11 @@ var Highbrow = this.Highbrow = function(conf) {
 
     // Crude html generation methods.
     // todo: these break in strict mode because of "arguments" rethink.
+    
+    hb.pre = function(str) {
+	// convenience method to interpolate hb prefix into html snippets.
+	return str.replace(/\$pre/g,hb.prefix);
+    };
 
     hb.tag = function(t,args){
 	var contents = "";

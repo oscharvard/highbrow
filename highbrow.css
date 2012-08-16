@@ -22,6 +22,11 @@ a {
   text-align: center;
 }
 
+#HB_title_l {
+    text-align: left;
+    font: 11px baskerville;
+}
+
 #HB_searchBox {
   text-align: left;
 } 
