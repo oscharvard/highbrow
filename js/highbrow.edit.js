@@ -97,13 +97,19 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 			editor.lastEditedTrackId = t.id;
 			var n = { "start" : editor.editStart };
 			n.stop     = editor.editStop;
-			n.id       = editor.editId ? editor.editId : (t.id + "_" + hb.notecount(t)+1);
+			n.id       = editor.note ? editor.note.id : (t.id + "_" + hb.notecount(t)+1);
 			n.content  = $('#' + hb.prefix + 'editNoteContent').val();
 			n.title    = $('#' + hb.prefix + 'editNoteTitle').val();
 			n.updated = Date.now();
-			if (  ! editor.editId ) {
+			if (  ! editor.note ) {
 			    n.created  = Date.now();
 			    t.notes.push(n);
+			} else {
+			    editor.note.start = n.start;
+			    editor.note.stop  = n.stop;
+			    editor.note.title = n.title;
+			    editor.note.updated = n.updated;
+			    editor.note.content = n.content;
 			}
 			editor.queueSave("replace","note",n,t);
 			hb.sPanel.update();
@@ -136,13 +142,13 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 	var defaultTrackId=null;
 	if ( note.id ) {
 	    // editing existing note.
-	    editor.editId = note.id;
+	    editor.note = note;
 	    $('#' + hb.prefix + 'editNoteTitle').val( note.title );
 	    $('#' + hb.prefix + 'editNoteContent').val( note.content );
 	    defaultTrackId = note.track.id;
 	} else {
 	    // editing empty (new) note.
-	    editor.editId='';
+	    editor.note=null;
 	    $('#' + hb.prefix + 'editNoteTitle').val( 'Untitled Note' );
 	    $('#' + hb.prefix + 'editNoteContent').val( '' );
 	    defaultTrackId = editor.lastEditedTrackId;
