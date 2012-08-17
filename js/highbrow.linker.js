@@ -35,7 +35,7 @@ Highbrow.Linker = this.Highbrow.Linker = function(hb,conf) {
 	    var z = hb.sectionById[zid];
 	    hb.map.setVisibleRange(z.start,z.stop);
 	} else if ( spa && spz ) {
-	    hb.map.setVisibleRange(spa,spz);
+	    hb.map.setVisibleRange(parseInt(spa),parseInt(spz));
 	}
     };
     

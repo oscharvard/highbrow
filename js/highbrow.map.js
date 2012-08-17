@@ -35,7 +35,7 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 	map.p = new Processing(map.canvas,map.processingOverrides);
 	map.monoFont = map.p.loadFont("courier");
 	map.fancyFont = map.p.loadFont("baskerville");
-	map.fancyFontItalic = map.p.loadFont("Baskerville-Italic");
+	map.fancyFontItalic = map.p.loadFont("baskerville-italic","baskerville");
     };
 
     // Procesing.js drawing method overrides.
@@ -468,6 +468,7 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 	}
 	var new_spa = Math.max(0,map.spa - (new_sps/2));
 	var new_spz = new_spa + new_sps;
+	// why set visiblerange twice?
 	map.setVisibleRange(new_spa,new_spz);
 	var newMouseSp = map.sp(map.p.mouseX);
 	var delta = oldMouseSp - newMouseSp;

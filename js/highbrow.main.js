@@ -443,9 +443,9 @@ var Highbrow = this.Highbrow = function(conf) {
     var createHeaderPanel = function(){
 	// todo. does too much. get rid of table stuff. should image stuff even be here? no. use template or something.
 	var html = '<table border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 3px;"><tr><td><!-- 2 columns, 1= misc nav and title, images. 2= login link -->';
-	html+='<table border="1" cellpadding="0" cellspacing="0" class="' + hb.prefix+ 'w" id="' + hb.prefix + 'header">';
+	html+='<table border="0" cellpadding="0" cellspacing="0" class="' + hb.prefix+ 'w" id="' + hb.prefix + 'header">';
 	html+='<td id="'+ hb.prefix +'title_l" class="' + hb.prefix + 'w4"> ';
-	html+='<a href="x" id="' + hb.prefix + 'showLinker">Link</a>';
+	html+='<a href="x" id="' + hb.prefix + 'showLinker">Link B</a>';
 	if ( hb.leftimage ) {
 	    html+='<img src="' + hb.leftimage + '" align="left" height="50" style="margin-bottom: 2px;" /> ';
 	}
