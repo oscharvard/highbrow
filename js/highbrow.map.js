@@ -300,14 +300,16 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
     };
 
 
-    map.descendStructureTier = function(node,y,height,topPrefix,currentDepth,maxDepth) {
-	// Either draw given structural level node or descend a level deeper depending on current zoom level.
-	if ( currentDepth === maxDepth ) {
-	    map.drawTieredStructure(node,node.children,y,height,topPrefix);
-	} else {
-	    $.each(node.children,function(index,child) {
-		    map.descendStructureTier(child,y,height,topPrefix+ node.name+ " : ",currentDepth+1,maxDepth);
+    map.descendStructureTier = function(n,y,height,topPrefix,currentDepth,maxDepth) {
+	if ( hb.overlaps(n.start,n.stop,map.spa,map.spz)){
+	    // Either draw given structural level n or descend a level deeper depending on current zoom level.
+	    if ( currentDepth === maxDepth ) {
+		map.drawTieredStructure(n,n.children,y,height,topPrefix);
+	    } else {
+		$.each(n.children,function(index,child) {
+		    map.descendStructureTier(child,y,height,topPrefix+ n.name+ " : ",currentDepth+1,maxDepth);
 		});
+	    }
 	}
     };
 
