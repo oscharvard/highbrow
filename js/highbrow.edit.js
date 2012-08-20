@@ -204,6 +204,16 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
     
     editor.deleteNote = function(note){
 	editor.queueSave("delete","note",note,note.track);	
+	var notes = note.track.notes
+	for ( var i=0; i < notes.length; i++ ) {
+	    if (note.id === notes[i].id ) {
+		notes.splice(i,1);
+		break;
+	    }
+	}
+	hb.sPanel.update();
+	hb.sPanel.showSpNotes(note.start);
+
     };
 
     initDialog();
