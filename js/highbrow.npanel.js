@@ -4,6 +4,8 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
     if (! (this instanceof Highbrow.NotesPanel)) throw "called Highbrow.NotesPanel constructor as if it were a function: missing 'new'.";
     var nPanel = this;
 
+    nPanel.testNote = null;
+
     var notes=[];
 
     nPanel.element = document.getElementById(conf.notesPanel);
@@ -15,26 +17,23 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 
     nPanel.showHelp();
 
-
     var attachListeners = function(){
-	// reinos: before ian lunch. pasted from edit.js
 	$("#"+nPanel.element.id).on("click","a",function(event){
-		// adjust bounds of annotated region.
-		event.preventDefault();
-		var action    = event.target.getAttribute('data-action');
-		var noteIndex = parseInt(event.target.getAttribute('data-note'));
-		alert("action: " + action + ", noteIndex: " + noteIndex);
-		if ( action === 'edit' ) {
-		    hb.editor.editNote(notes[noteIndex]);
-		} else if ( action === 'delete' ) {
-		    hb.editor.deleteNote(notes[noteIndex]);
-		} else {
-		    throw "Unknown data-action: " + action;
-		}
-		//editor.nudge(direction,delta);
-	    });
+	    event.preventDefault();
+	    var action    = event.target.getAttribute('data-action');
+	    var noteIndex = parseInt(event.target.getAttribute('data-note'));
+	    if ( action === 'edit' ) {
+		hb.editor.editNote(notes[noteIndex]);
+	    } else if ( action === 'delete' ) {
+		hb.editor.deleteNote(notes[noteIndex]);
+	    } else if ( action === 'reply' ) {
+		alert("Placeholder for reply!");
+	    } else {
+		nPanel.testNote= notes[noteIndex];
+		throw "Unknown data-action: " + action;
+	    }
+	});
     };
-
 
     nPanel.showSpNotes = function(sp) {
 	//$(nPanel.element).html("Will show notes at sp: " + sp);
@@ -43,32 +42,33 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	var spa = sp;
 	var spz = sp;
 	$.each(notes, function(index, n) {
-		html += '<li>';
-		var morehypertext="";
-		if ( n.sloc ) {
-		    morehypertext = n.sloc;
+	    html += '<li>';
+	    var morehypertext="";
+	    if ( n.sloc ) {
+		morehypertext = n.sloc;
+	    }
+	    var morelink =  "";
+	    if (n.url) {
+		var base = "";
+		if ( n.track.base ) {
+		    base = n.track.base;
 		}
-		var morelink =  "";
-		if (n.url) {
-		    var base = "";
-		    if ( n.track.base ) {
-			base = n.track.base;
-		    }
-		    morelink = "[&nbsp;<a target='newtab' href='" + base + n.url + "'>" + morehypertext + "</a>&nbsp;]"; 
-		}
-		var content = n.content ? n.content : n.pre;
-		var title   = n.title   ? (n.title + "<br/>")  : "";
-		var editLink = "";
-		if ( n.track.editable ) {
-		    editLink = '<div>[ <a href="" data-action="edit" data-note="' + index + '">edit</a> | <a href="" data-action="delete" data-note="' + index + '">delete</a> ]</div>';
-		    visEditNotes.push(n);
-
-		}
-		html += n.track.name + ": " + title + content + " " + morelink + editLink;
-		html += "</li>";
-		spa = spa < n.start ? spa : n.start;
-		spz = spz > n.stop ?  spz : n.stop;
-	    });
+		morelink = "[&nbsp;<a target='newtab' href='" + base + n.url + "'>" + morehypertext + "</a>&nbsp;]"; 
+	    }
+	    var content = n.content ? n.content : n.pre;
+	    var title   = n.title   ? (n.title + "<br/>")  : "";
+	    var addAction = function(action){ return '<a href="" data-action="' + action + '" data-note="' + index + '">' + action + '</a>'; };
+	    var editLink = '<div>[ ' + addAction("reply");
+	    if ( n.track.editable ) {
+		editLink += ' | ' + addAction('edit') + ' | ' + addAction('delete');
+		visEditNotes.push(n);
+	    }
+	    editLink += ']</div>';
+	    html += n.track.name + ": " + title + content + " " + morelink + editLink;
+	    html += "</li>";
+	    spa = spa < n.start ? spa : n.start;
+	    spz = spz > n.stop ?  spz : n.stop;
+	});
 	html += "</ul>";
 	if ( notes.length === 0 ) {
 	    html = "No overlapping notes.";

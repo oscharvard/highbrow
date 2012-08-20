@@ -113,6 +113,7 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 			}
 			editor.queueSave("replace","note",n,t);
 			hb.sPanel.update();
+			hb.sPanel.showSpNotes(n.start);
 			jqd.dialog("close");
 		    }
 		}});
