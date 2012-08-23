@@ -27,7 +27,7 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	    } else if ( action === 'delete' ) {
 		hb.editor.deleteNote(notes[noteIndex]);
 	    } else if ( action === 'reply' ) {
-		alert("Placeholder for reply!");
+		hb.editor.editReply(notes[noteIndex]);
 	    } else {
 		nPanel.testNote= notes[noteIndex];
 		throw "Unknown data-action: " + action;
@@ -35,39 +35,58 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	});
     };
 
+    var renderReply = function(noteIndex,note,replyIndex,reply){
+	return '<li>' + reply.content + '</li>';
+    };
+
+    var renderNote = function(noteIndex,note){
+	var html = '<li>';
+	var morehypertext="";
+	if ( note.sloc ) {
+	    morehypertext = note.sloc;
+	}
+	var morelink =  "";
+	if (note.url) {
+	    var base = "";
+	    if ( note.track.base ) {
+		base = note.track.base;
+	    }
+	    morelink = "[&nbsp;<a target='newtab' href='" + base + note.url + "'>" + morehypertext + "</a>&nbsp;]"; 
+	}
+	var content = note.content ? note.content : note.pre;
+	var title   = note.title   ? (note.title + "<br/>")  : "";
+	var addAction = function(action){ return '<a href="" data-action="' + action + '" data-note="' + noteIndex + '">' + action + '</a>'; };
+	var editLink = '<div>[ ' + addAction("reply");
+	if ( note.track.editable ) {
+	    editLink += ' | ' + addAction('edit') + ' | ' + addAction('delete');
+	    visEditNotes.push(note);
+	}
+	editLink += ']</div>';
+	html += note.track.name + ": " + title + content + " " + morelink + editLink;
+	if ( note.hasOwnProperty("replies") ) {
+	    html+="<ul>";
+	    var replies = note.replies;
+	    $.each(replies, function(replyIndex, reply) {
+		html+= renderReply(noteIndex, note,replyIndex,reply);
+	    });
+	    html+="</ul>";
+	}
+	html += "</li>";
+	return html;
+    };
+
+    
+
     nPanel.showSpNotes = function(sp) {
 	//$(nPanel.element).html("Will show notes at sp: " + sp);
 	var html = "<ul>";
 	notes = hb.getNotes(hb.getInspectableTracks(),{ start: sp, stop: sp });
 	var spa = sp;
 	var spz = sp;
-	$.each(notes, function(index, n) {
-	    html += '<li>';
-	    var morehypertext="";
-	    if ( n.sloc ) {
-		morehypertext = n.sloc;
-	    }
-	    var morelink =  "";
-	    if (n.url) {
-		var base = "";
-		if ( n.track.base ) {
-		    base = n.track.base;
-		}
-		morelink = "[&nbsp;<a target='newtab' href='" + base + n.url + "'>" + morehypertext + "</a>&nbsp;]"; 
-	    }
-	    var content = n.content ? n.content : n.pre;
-	    var title   = n.title   ? (n.title + "<br/>")  : "";
-	    var addAction = function(action){ return '<a href="" data-action="' + action + '" data-note="' + index + '">' + action + '</a>'; };
-	    var editLink = '<div>[ ' + addAction("reply");
-	    if ( n.track.editable ) {
-		editLink += ' | ' + addAction('edit') + ' | ' + addAction('delete');
-		visEditNotes.push(n);
-	    }
-	    editLink += ']</div>';
-	    html += n.track.name + ": " + title + content + " " + morelink + editLink;
-	    html += "</li>";
-	    spa = spa < n.start ? spa : n.start;
-	    spz = spz > n.stop ?  spz : n.stop;
+	$.each(notes, function(noteIndex, note) {
+	    html += renderNote(noteIndex, note);
+	    spa = spa < note.start ? spa : note.start;
+	    spz = spz > note.stop ?  spz : note.stop;
 	});
 	html += "</ul>";
 	if ( notes.length === 0 ) {

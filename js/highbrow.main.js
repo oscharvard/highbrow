@@ -88,10 +88,10 @@ var Highbrow = this.Highbrow = function(conf) {
     };
 
     var attachListeners = function(){
-	$("#" + hb.prefix + "zoomIn").click(function(e){  hb.map.zoomIn()   ; e.preventDefault(); });
-	$("#" + hb.prefix + "zoomOut").click(function(e){ hb.map.zoomOut()   ; e.preventDefault(); });
-	$("#" + hb.prefix + "panLeft").click(function(e)  { hb.map.panLeft()  ; e.preventDefault(); });
-	$("#" + hb.prefix + "panRight").click(function(e) { hb.map.panRight() ; e.preventDefault(); });
+	$(hb.pre("#$HBzoomIn")).click(function(e){  hb.map.zoomIn()   ; e.preventDefault(); });
+	$(hb.pre("#$HBzoomOut")).click(function(e){ hb.map.zoomOut()   ; e.preventDefault(); });
+	$(hb.pre("#$HBpanLeft")).click(function(e)  { hb.map.panLeft()  ; e.preventDefault(); });
+	$(hb.pre("#$HBpanRight")).click(function(e) { hb.map.panRight() ; e.preventDefault(); });
 	$(window).resize(function() {
 		hb.adjustBounds();
 	    });
@@ -124,11 +124,8 @@ var Highbrow = this.Highbrow = function(conf) {
 	for (var i=0; i< tracks.length; i++ ) {
 	    var track = tracks[i];
 	    group.trackIds.push(track.id);
-	    //alert("Hello Bug A. group.notecount: " + track.id + ":" + group.notecount);
-	    //alert("Hello Bug B. track notecount: " + notecount(track));
 	    group.notecount += hb.notecount(track);
 	}
-	//alert("Hi Reinhard. Don't be Lazy:" + trackIds.length);
     };
 
     hb.updateAutoAllGroup = function(){
@@ -519,14 +516,14 @@ var Highbrow = this.Highbrow = function(conf) {
 	hb.addTrack(t);
 	hb.editor.queueSave("replace","track",t,t);
     };
-
-    // Crude html generation methods.
-    // todo: these break in strict mode because of "arguments" rethink.
     
     hb.pre = function(str) {
 	// convenience method to interpolate hb prefix into html snippets.
-	return str.replace(/\$pre/g,hb.prefix);
+	return str.replace(/\$HB/g,hb.prefix);
     };
+
+    // Crude html generation methods.
+    // todo: these break in strict mode because of "arguments" rethink.
 
     hb.tag = function(t,args){
 	var contents = "";

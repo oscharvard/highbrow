@@ -4,8 +4,10 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
     
     if (! (this instanceof Highbrow.NoteEditor)) throw "called Highbrow.NoteEditor constructor as if it were a function: missing 'new'.";
     var editor = this;
-    var jqd = null; // jquery dialog object.
+    var note_jqd = null; // jquery dialog object for note edit widget.
+    var reply_jqd = null; // jquery dialog object for reply edit widget.
     var pendingSaves = [];
+
     //alert("Hi Edit");
 
     var selectiveClone = function(source,seedKey,ignoreKeys) {
@@ -75,15 +77,15 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
     };
 
 
-    var initDialog = function(){
+    var initNoteEditDialog = function(){
 	var html="";
 	var trackSelector = '<select id="' + hb.prefix +'trackSelector" style="align: right;"></select>';
-	html+= '<form id="' + hb.prefix + 'editForm">';
+	html+= '<form id="' + hb.prefix + 'noteEditForm">';
 	html+='Annotating from position <span><a data-dir="0" data-delta="-1" href="">&lt;</a> <span id="' + hb.prefix + 'editStartDisplay"></span> <a data-dir="0" data-delta="1" href="">&gt;</a> to  <a data-dir="1" data-delta="-1" href="">&lt;</a> <span id="' + hb.prefix + 'editStopDisplay"></span>  <a data-dir="1" data-delta="1" href="">&gt;</a></span><span id="' + hb.prefix + 'editText"></span>';
 	html+='<div> <input type="text" id="' + hb.prefix + 'editNoteTitle" style="width: 300px;" value="Untitled Note"></input> ' + trackSelector + '</div>';
 	html+='<div><textarea class="jquery_ckeditor" style="width:600px;" id="' + hb.prefix + 'editNoteContent">"+"</textarea></div>';
 	html+= '</form>';
-	jqd = $('<div class="'+hb.prefix+'misc" id="'+hb.prefix+'editor"></div>')
+	note_jqd = $('<div class="'+hb.prefix+'misc" id="'+hb.prefix+'editor"></div>')
 	.html(html)
 	.dialog({
 		autoOpen: false,
@@ -114,7 +116,7 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 			editor.queueSave("replace","note",n,t);
 			hb.sPanel.update();
 			hb.sPanel.showSpNotes(n.start);
-			jqd.dialog("close");
+			note_jqd.dialog("close");
 		    }
 		}});
 	var config = { toolbar: [ 
@@ -124,6 +126,61 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 	};
 	$('.jquery_ckeditor').ckeditor(config);
     };
+
+
+    var getRootNote = function(note) {
+	if ( note.hasOwnProperty("parent") ) {
+	    return getRootNote(note.parent);
+	} else {
+	    return note;
+	}
+    };
+    
+    var initReplyEditDialog = function(){
+	var html="";
+	html+= '<form id="$HBreplyEditForm">';
+	html+= '<div><input type="text" id="$HBeditReplyTitle" style="width: 300px;" value=""></input> </div>';
+	html+= '<div><textarea class="jquery_ckeditor" style="width:600px;" id="$HBeditReplyContent">"+"</textarea></div>';
+	html+= '</form>';
+	reply_jqd = $(hb.pre('<div class="$HBmisc" id="$HBreplyEditor"></div>'))
+	    .html(hb.pre(html))
+	    .dialog({
+		autoOpen: false,
+		title: 'Edit Reply',
+		height: 450,
+		width: 650,
+		buttons:
+		{
+		    "Done" : function() {
+			alert("Placeholder for Done with reply edit");
+			var reply = {};
+			reply.content  = $('#' + hb.prefix + 'editReplyContent').val();
+			reply.title    = $('#' + hb.prefix + 'editReplyTitle').val();
+			reply.updated = Date.now();
+			if ( editor.reply ) {
+			    // update existing note.
+			} else {
+			    // create new note.
+			    reply.parent = editor.replyTo;
+			    if ( ! editor.replyTo.hasOwnProperty("replies")){
+				editor.replyTo.replies=[];
+			    }
+			    editor.replyTo.replies.push(reply);
+			}
+			//editor.queueSave("replace","comment",r,t);
+			hb.sPanel.update();
+			hb.sPanel.showSpNotes(getRootNote(reply).start);
+			reply_jqd.dialog("close");
+		    }
+		}});
+	var config = { toolbar: [ 
+				 ['Bold', 'Italic', '-', 'NumberedList', 'BulletedList', '-', 'Link', 'Unlink', 'Image', 'Youtube'], 
+				 ['UIColor']
+				  ]
+	};
+	$('.jquery_ckeditor').ckeditor(config);
+    };
+
 
     var attachListeners = function(){
 	$("#"+hb.prefix+"editor").on("click","a",function(event){
@@ -136,7 +193,23 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 	    });
     };
 
-    var updateEditDialog = function(note){
+    var updateReplyEditDialog = function(note,reply){
+	alert("REINOS: placeholder for updateReplyEditDialog");
+	editor.replyTo = note;
+	if ( reply ) {
+	    // edit existing reply.
+	    editor.reply = reply;
+	    $(hb.pre('#$HBeditReplyTitle')).val( reply.title );
+	    $(hb.pre('#$HBeditReplyContent')).val( reply.content );
+	} else {
+	    // this is a new reply.
+	    editor.reply = null;
+	    $(hb.pre('#$HBeditReplyTitle')).val( 'Re:' + note.title );
+	    $(hb.pre('#$HBeditReplyContent')).val( '' );
+	}
+    };
+
+    var updateNoteEditDialog = function(note){
 	// fill in note edit fields with current note values (or clear).
 	editor.editStart = note.start;
 	editor.editStop  = note.stop;
@@ -154,11 +227,11 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 	    $('#' + hb.prefix + 'editNoteContent').val( '' );
 	    defaultTrackId = editor.lastEditedTrackId;
 	}
-	updateEditSelection();
+	updateNoteEditSelection();
 	updateTrackSelector(defaultTrackId);
     };
 
-    var updateEditSelection = function(){
+    var updateNoteEditSelection = function(){
 	$('#' + hb.prefix + 'editStartDisplay').html(editor.editStart);
 	$('#' + hb.prefix + 'editStopDisplay').html(editor.editStop);
 	$('#' + hb.prefix + 'editText').html( '<pre>&#8220;' + sequence.data.substr(editor.editStart-1,(editor.editStop-editor.editStart)+1)  + '&#8221;</pre>');
@@ -192,16 +265,22 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 	} else if ( direction === 1 ) {
 	    editor.editStop += delta;
 	}
-	updateEditSelection();
+	updateNoteEditSelection();
 	return false;
     };
 
     editor.editNote = function(note){
-	jqd.dialog('open');
-	updateEditDialog(note);
+	note_jqd.dialog('open');
+	updateNoteEditDialog(note);
 	return false;
     };
     
+    editor.editReply = function(note,reply){
+	reply_jqd.dialog('open');
+	updateReplyEditDialog(note,reply);
+	return false;
+    };
+
     editor.deleteNote = function(note){
 	editor.queueSave("delete","note",note,note.track);	
 	var notes = note.track.notes
@@ -216,7 +295,8 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 
     };
 
-    initDialog();
+    initNoteEditDialog();
+    initReplyEditDialog();
     attachListeners();
 };
 
