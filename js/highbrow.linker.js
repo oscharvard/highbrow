@@ -40,7 +40,7 @@ Highbrow.Linker = this.Highbrow.Linker = function(hb,conf) {
     };
     
     var init = function(){
-	$("#"+hb.prefix + "showLinker").click(function(e) { show() ; e.preventDefault(); });
+	$(hb.pre('#$HBshowLinker')).click(function(e) { show() ; e.preventDefault(); });
 	updateNavState();
 	// re-apply state if the hash parameters are changed.
 	$(window).bind( 'hashchange', function(){ updateNavState();   });
@@ -50,24 +50,19 @@ Highbrow.Linker = this.Highbrow.Linker = function(hb,conf) {
     var show = function(){
 	var link = createLink();
 	jQuery.bbq.pushState(  link  );
-	$(hb.pre('#$prelink')).html(document.location.href);
-	$(hb.pre('#$prelink')).attr('href',document.location.href);
+	$(hb.pre('#$HBlink')).html(document.location.href);
+	$(hb.pre('#$HBlink')).attr('href',document.location.href);
 	jqd.dialog('open');
 	return false;
     };
 
     var initDialog = function(){
-
-	var dialogId =  hb.prefix+'linkerDialog';
 	var html ="Deep linking allows you to specify precise zoom and selection states in highbrow for bookmarking and sharing.";
-
-	html += hb.pre('<p>The deep link for your current highbrow state is:</p><p><a href="" id="$prelink"></a></p>');
-
+	html += '<p>The deep link for your current highbrow state is:</p><p><a href="" id="$HBlink"></a></p>';
 	html += '<p>The url in your web browser has been updated to reflect this.</p>';
-
-	jqd = $('<div id="' + dialogId + '" class=\"hb_misc\"></div>')
-	.html(html)
-	.dialog({
+	jqd = $(hb.pre('<div id="$HBlinkerDialog" class="$HBmisc"></div>'))
+	    .html(hb.pre(html))
+	    .dialog({
 		autoOpen: false,
 		title: 'Create Deep Link To Highbrow',
 		height: 300,
@@ -78,7 +73,7 @@ Highbrow.Linker = this.Highbrow.Linker = function(hb,conf) {
 			$(this).dialog("close");
 		    }
 		}
-	});
+	    });
     };
   
     init();

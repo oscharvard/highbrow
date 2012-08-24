@@ -119,7 +119,7 @@ var Highbrow = this.Highbrow = function(conf) {
     };
 
     var initAutoAllGroup = function(){
-	var group = { 'trackIds': [], 'id': 'auto_all', 'name': 'All Commentators', 'notecount':0, 'visible': true };
+	var group = { 'trackIds': [], 'id': 'auto_all', 'name': 'All Commentataries', 'notecount':0, 'visible': true };
 	hb.groups.unshift(group);
 	for (var i=0; i< tracks.length; i++ ) {
 	    var track = tracks[i];
@@ -462,7 +462,7 @@ var Highbrow = this.Highbrow = function(conf) {
 	html+='<tr>';
 	html+='<td id="' + hb.prefix + 'searchBox"><a href="x" id="' + hb.prefix + 'showSearchDialog">Search Text</a></td>';
 	html+='<td class="' + hb.prefix + 'nav""> <a id="' + hb.prefix + 'panLeft" href="x">&lt; Left</a> | <a id="' + hb.prefix + 'zoomIn" href="x">+ Zoom In</a>  | <a id="'  + hb.prefix + 'zoomOut" href="x">Zoom Out -</a> | <a id="' + hb.prefix + 'panRight" href="x">Right &gt;</a></td>';
-	html+='<td id="' + hb.prefix + 'settingsBox"><a href="x" id="' + hb.prefix + 'showSettingsDialog">Settings</a></td>';
+	html+='<td id="' + hb.prefix + 'settingsBox"><a href="x" id="' + hb.prefix + 'showSettingsDialog">Commentaries</a></td>';
 	html+='</tr>';
 	html+='</table></td>';
 	html+='</tr></table>';

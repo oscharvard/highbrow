@@ -12,31 +12,64 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
     nPanel.headerElement = document.getElementById(conf.notesHeader);
 
     nPanel.showHelp = function() {
-	$(nPanel.element).html('<p class="HB_panelHelp">Click on a <span class="HB_noted">note</span> in the text on the right to inspect it here.</p>');    
+	$(nPanel.element).html('<div class="HB_panelHelp"><p>Welcome to the Highbrow Commentary Browser!</p><p>Click on a <span class="HB_noted">note</span> in the text on the right to inspect it here.</p></div>');    
     };
 
     nPanel.showHelp();
+
+    var noteAtPath = function(notePath) {
+	// notePath represends the index for each nest level of notes delimited by period.
+	// 1 = first note
+	// 2.1.3 = third reply to first reply to second note.
+	var indices = notePath.split(".");
+	var note = notes[indices[0]]; 
+	$.each(indices, function(level, noteIndex) {
+	    if ( level > 0 ) {
+		note = note.replies[noteIndex];
+	    }
+	});
+	return note;
+    };
 
     var attachListeners = function(){
 	$("#"+nPanel.element.id).on("click","a",function(event){
 	    event.preventDefault();
 	    var action    = event.target.getAttribute('data-action');
-	    var noteIndex = parseInt(event.target.getAttribute('data-note'));
+	    var note      = noteAtPath(event.target.getAttribute('data-note'));
 	    if ( action === 'edit' ) {
-		hb.editor.editNote(notes[noteIndex]);
+		hb.editor.editNote(note);
 	    } else if ( action === 'delete' ) {
-		hb.editor.deleteNote(notes[noteIndex]);
+		hb.editor.deleteNote(note);
 	    } else if ( action === 'reply' ) {
-		hb.editor.editReply(notes[noteIndex]);
+		hb.editor.editReply(note);
 	    } else {
-		nPanel.testNote= notes[noteIndex];
+		nPanel.testNote= notes;
 		throw "Unknown data-action: " + action;
 	    }
 	});
     };
+    
+    var noteIsEditable = function(note) {
+	if ( note.hasOwnProperty('uid') ) {
+	    return note.uid = hb.user.uid;
+	} else if ( note.hasOwnProperty('track') ) {
+	    // TODO: get rid of this.
+	    return note.track.editable;
+	} else {
+	    return false;
+	}
+    };
 
-    var renderReply = function(noteIndex,note,replyIndex,reply){
-	return '<li>' + reply.content + '</li>';
+    var renderEditLinks = function(noteIndex,note){
+	var addAction = function(action){
+	    return '<a href="" data-action="' + action + '" data-note="' + noteIndex + '">' + action + '</a>';
+	};
+	var editLinks = '<div>[ ' + addAction("reply");
+	if ( noteIsEditable(note) ) {
+	    editLinks += ' | ' + addAction('edit') + ' | ' + addAction('delete');
+	}
+	editLinks += ']</div>';
+	return editLinks;
     };
 
     var renderNote = function(noteIndex,note){
@@ -55,27 +88,19 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	}
 	var content = note.content ? note.content : note.pre;
 	var title   = note.title   ? (note.title + "<br/>")  : "";
-	var addAction = function(action){ return '<a href="" data-action="' + action + '" data-note="' + noteIndex + '">' + action + '</a>'; };
-	var editLink = '<div>[ ' + addAction("reply");
-	if ( note.track.editable ) {
-	    editLink += ' | ' + addAction('edit') + ' | ' + addAction('delete');
-	    visEditNotes.push(note);
-	}
-	editLink += ']</div>';
-	html += note.track.name + ": " + title + content + " " + morelink + editLink;
+	var editLinks = hb.user ? renderEditLinks(noteIndex,note) : "";
+	html += title + content + " " + morelink + editLinks;
 	if ( note.hasOwnProperty("replies") ) {
 	    html+="<ul>";
 	    var replies = note.replies;
 	    $.each(replies, function(replyIndex, reply) {
-		html+= renderReply(noteIndex, note,replyIndex,reply);
+		html+= renderNote(""+noteIndex+"."+replyIndex, reply);
 	    });
 	    html+="</ul>";
 	}
 	html += "</li>";
 	return html;
     };
-
-    
 
     nPanel.showSpNotes = function(sp) {
 	//$(nPanel.element).html("Will show notes at sp: " + sp);

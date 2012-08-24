@@ -152,7 +152,6 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 		buttons:
 		{
 		    "Done" : function() {
-			alert("Placeholder for Done with reply edit");
 			var reply = {};
 			reply.content  = $('#' + hb.prefix + 'editReplyContent').val();
 			reply.title    = $('#' + hb.prefix + 'editReplyTitle').val();
@@ -162,6 +161,7 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 			} else {
 			    // create new note.
 			    reply.parent = editor.replyTo;
+			    reply.uid = hb.user.uid;
 			    if ( ! editor.replyTo.hasOwnProperty("replies")){
 				editor.replyTo.replies=[];
 			    }
@@ -194,7 +194,6 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
     };
 
     var updateReplyEditDialog = function(note,reply){
-	alert("REINOS: placeholder for updateReplyEditDialog");
 	editor.replyTo = note;
 	if ( reply ) {
 	    // edit existing reply.
