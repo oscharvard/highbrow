@@ -23,8 +23,7 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 	map.height = map.canvas.height;
 	map.plotX=0;
 	map.plotY=30;
-	map.labelWidth = 135;
-	map.minLabelWidth = 100;
+	map.labelWidth = 168;
 	map.plotWidth = map.width-map.plotX-map.labelWidth;
 	map.plotHeight = map.height-map.plotY;
     };
@@ -379,7 +378,7 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 	    if ( t.type != 'structure')  {
 		map.p.textFont(map.fancyFontItalic);			
 		map.p.textSize("13");
-		map.p.text(t.name,map.plotWidth+20,y);
+		map.p.text(t.name,map.plotWidth+10,y);
 		map.p.textFont(map.monoFont);			
 		map.p.textSize("8");
 		map.p.textAlign(map.p.RIGHT);
