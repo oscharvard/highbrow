@@ -135,7 +135,7 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
 	var t = hb.trackById[trackId];
 	t.name = target.value;
 	$('#'+ttId).dataTable().fnUpdate( t.name, row, col );
-	hb.editor.queueSave("replace","track",t,t);
+	hb.editor.queueSave("update","commentary",t,t);
     };
 
     var tag = function(name,attributes,text){
@@ -154,20 +154,21 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
     var initTTJQD = function(){
 	// initialized track table jquery dialog widget.
 	var html = "";
-	html += '<h3>Annotation Tracks</h3>';
-	html += '<p>Toggle annotation tracks on and off by ticking the box in the "show" column.</p>';
-	html += '<p>Click on the "member" count for track groups to add or remove member tracks.</p>';
+	html += '<p>A commentary is a collection of comments or annotations on a text. In Highbrow, each commentary is drawn as a horizontal band plotting annotation density against the referenced text.'
+	html += 'Toggle commentaries on and off by ticking the box in the "show" column.</p>';
+	html += '<p>Commentaries may be grouped. Click on the "member" count for commentary groups to add or remove member commentaries.</p>';
+	html += '<p>Create new commentaries or groups using the buttons at the bottom of this window.</p>';
 	html += '<div id="' + ttDivId +'"><table cellpadding="0" cellspacing="0" border="0" class="display" id="'+ ttId + '"></table></div>';
 	ttjqd = $('<div class="hb_misc"></div>')
 	.html(html)
 	.dialog({
 		autoOpen: false,
-		title: 'Highbrow Tracks',
+		title: 'Configure Highbrow Commentaries',
 		height: 520,
 		width: 650,
 		buttons:
 		{
-		    "New Track" : function() {
+		    "New Commentary" : function() {
 			hb.createOrdinaryTrack();
 			//alert("Created new track " + t.name);
 		    },

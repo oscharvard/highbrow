@@ -51,6 +51,7 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 
 	// Set up the drawing routine.
 	p.draw = function(){
+	    //hb.indexTracks();
 	    p.background( 255 );
 	    p.fill( 0 );
 	    p.textFont(map.monoFont);			

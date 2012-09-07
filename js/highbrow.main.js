@@ -121,8 +121,8 @@ var Highbrow = this.Highbrow = function(conf) {
     var initAutoAllGroup = function(){
 	var group = { 'trackIds': [], 'id': 'auto_all', 'name': 'All Commentataries', 'notecount':0, 'visible': true };
 	hb.groups.unshift(group);
-	for (var i=0; i< tracks.length; i++ ) {
-	    var track = tracks[i];
+	for (var i=0; i< hb.tracks.length; i++ ) {
+	    var track = hb.tracks[i];
 	    group.trackIds.push(track.id);
 	    group.notecount += hb.notecount(track);
 	}
@@ -130,6 +130,13 @@ var Highbrow = this.Highbrow = function(conf) {
 
     hb.updateAutoAllGroup = function(){
 	
+    };
+
+    hb.indexTracks = function(){
+	hb.trackById = {};
+	$.each(hb.tracks, function(index, track) {
+	    hb.trackById[track.id] = track;
+	});
     };
 
     var initTracks = function(tracks,groups,structure){
@@ -507,14 +514,14 @@ var Highbrow = this.Highbrow = function(conf) {
     hb.createOrdinaryTrack = function(){
 	var t=hb.initTrack();
 	t.name = hb.user ? hb.user.name + "'s Notes" : "New Track";	
-	t.id = "t_"+ hb.user.uid + "_" + new Date().getTime();
+	t.id = "t_"+ hb.user.id + "_" + new Date().getTime();
 	t.user = hb.user;
 	t.editable = true;
 	t.type="notes";
 	t.sharing=2;
 	t.notes=[];
 	hb.addTrack(t);
-	hb.editor.queueSave("replace","track",t,t);
+	hb.editor.queueSave("add","commentary",t,t);
     };
     
     hb.pre = function(str) {

@@ -39,40 +39,62 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 	    //alert("ps id: " + ps.verb + " " +  ps.type + " " + ps.object.id);
 	    ps.pushed = new Date();
 	    pushedSaves.push(ps);
-	    var command = {"id": ps.object.id};
+	    var command = {};
 	    command.verb = ps.verb;
 	    command.type = ps.type;
 	    // clone the object so we can remove fields that don't need to be saved.
+	    // unsafe: should be explicit which fields to save, not the reverse.
 	    var ignoreKeys = [];
 	    if ( ps.type === "note" && ps.context ) {
-		ignoreKeys = [ "track" ];
-	    } else if ( ps.type === "track" ) {
+		ignoreKeys = [ 'track','replies' ];
+	    } else if ( ps.type === "commentary" ) {
 		ignoreKeys = ['size','order','min','max','pxScore','notes','debug'];
+	    } else if ( ps.type === 'reply') {
+		ignoreKeys = ["parent","replies"];
 	    } else {
 		alert("Strange error.");
 	    }
 	    //alert("Command: " + command.verb);
-	    if ( command.verb==="replace"){
-		var meta = selectiveClone(ps.object,"id",ignoreKeys);
+	    var meta = {};
+	    if ( command.verb==="add" || command.verb==="update"){
+		meta = selectiveClone(ps.object,"id",ignoreKeys);
+		if ( ps.type === 'reply' ) {
+		    meta.parent_id = ps.object.parent.id;
+		    meta.thread_id = getRootNote(ps.object).id;
+		}
 		//alert("meta id: " + meta.id);
 		//alert("meta(a): " + JSON.stringify(meta,null,2));
 		if ( ps.type === "note" && ps.context ) {
-		    meta.trackid = ps.context.id;
+		    meta.commentary_id = ps.context.id;
 		}
+	    } else {
+		meta = { 'id' : ps.object.id };
 	    }
 	    command.meta = meta;
 	    commands.push(command);
 	}
 	if ( commands.length > 0 ) {
-	    var commandsJSON = JSON.stringify(commands,null,2)
+	    var commandsJSON = JSON.stringify(commands,null,2);
 	    //alert("sending following to server: commands=" +  commandsJSON +"\n"+url+"?commands="+escape(commandsJSON));
 	    $.ajax({
-		    type: 'POST',
-		    url: url,
-		    data: { "commands" : commandsJSON},
-		    success: function(data, textStatus, jqXHR) { var alert="Your edits have been saved to the server.\nServer says:\n" + textStatus; },
-		    error: function(jqXHR, textStatus, errorThrown) { alert("Error saving edits to server.\nServer says:\nerrorThrown: \n" + errorThrown + "\ntextStatus:\n" + textStatus + "\njqXHR.reponseText: \n" + jqXHR.responseText); }
-		});
+		type: 'POST',
+		url: url,
+		dataType: 'json',
+		data: { "commands" : commandsJSON},
+		success: function(data, textStatus, jqXHR) {
+		    $.each(data, function(index, commandResponse) {
+			// update object ids for inserts.
+			if ( pushedSaves[index].verb === 'add' ) {
+			    pushedSaves[index].object.id = commandResponse.id;
+			    if ( pushedSaves[index].type === 'commentary' ) {
+				hb.indexTracks();
+			    }
+			}
+		    });
+		    //var alert="Your edits have been saved to the server.\nServer says:\n" + textStatus;
+		},
+		error: function(jqXHR, textStatus, errorThrown) { alert("Error saving edits to server.\nServer says:\nerrorThrown: \n" + errorThrown + "\ntextStatus:\n" + textStatus + "\njqXHR.reponseText: \n" + jqXHR.responseText); }
+	    });
 	}
     };
 
@@ -99,21 +121,21 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 			editor.lastEditedTrackId = t.id;
 			var n = { "start" : editor.editStart };
 			n.stop     = editor.editStop;
-			n.id       = editor.note ? editor.note.id : (t.id + "_" + hb.notecount(t)+1);
 			n.content  = $('#' + hb.prefix + 'editNoteContent').val();
 			n.title    = $('#' + hb.prefix + 'editNoteTitle').val();
-			n.updated = Date.now();
+			var verb = null;
 			if (  ! editor.note ) {
-			    n.created  = Date.now();
+			    verb = "add";
 			    t.notes.push(n);
 			} else {
+			    verb = "update";
+			    n.id       = editor.note.id;
 			    editor.note.start = n.start;
 			    editor.note.stop  = n.stop;
 			    editor.note.title = n.title;
-			    editor.note.updated = n.updated;
 			    editor.note.content = n.content;
 			}
-			editor.queueSave("replace","note",n,t);
+			editor.queueSave(verb,"note",n,t);
 			hb.sPanel.update();
 			hb.sPanel.showSpNotes(n.start);
 			note_jqd.dialog("close");
@@ -130,8 +152,10 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 
     var getRootNote = function(note) {
 	if ( note.hasOwnProperty("parent") ) {
+	    console.log("reinos: has parent...");
 	    return getRootNote(note.parent);
 	} else {
+	    console.log("reinos: no parent. returning note.");
 	    return note;
 	}
     };
@@ -155,19 +179,26 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 			var reply = {};
 			reply.content  = $('#' + hb.prefix + 'editReplyContent').val();
 			reply.title    = $('#' + hb.prefix + 'editReplyTitle').val();
-			reply.updated = Date.now();
+			var verb = null;
 			if ( editor.reply ) {
 			    // update existing note.
+			    reply.id = editor.reply.id;
+			    editor.reply.content = reply.content;
+			    editor.reply.title   = reply.title;
+			    reply.parent = editor.reply.parent;
+			    verb = "update";
 			} else {
 			    // create new note.
 			    reply.parent = editor.replyTo;
-			    reply.uid = hb.user.uid;
+			    reply.user_id = hb.user.id;
+			    reply.author = hb.user;
 			    if ( ! editor.replyTo.hasOwnProperty("replies")){
 				editor.replyTo.replies=[];
 			    }
 			    editor.replyTo.replies.push(reply);
+			    verb = "add";
 			}
-			//editor.queueSave("replace","comment",r,t);
+			editor.queueSave(verb,"reply",reply);
 			hb.sPanel.update();
 			hb.sPanel.showSpNotes(getRootNote(reply).start);
 			reply_jqd.dialog("close");
@@ -282,7 +313,7 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 
     editor.deleteNote = function(note){
 	editor.queueSave("delete","note",note,note.track);	
-	var notes = note.track.notes
+	var notes = note.track.notes;
 	for ( var i=0; i < notes.length; i++ ) {
 	    if (note.id === notes[i].id ) {
 		notes.splice(i,1);
@@ -291,7 +322,20 @@ Highbrow.NoteEditor = this.Highbrow.NoteEditor = function(hb,conf) {
 	}
 	hb.sPanel.update();
 	hb.sPanel.showSpNotes(note.start);
+    };
 
+    editor.deleteReply = function(note){
+	// REINOS: track argument is problematic.
+	//editor.queueSave("delete","reply",note, note.track);	
+	var notes = note.parent.replies;
+	for ( var i=0; i < notes.length; i++ ) {
+	    if (note.id === notes[i].id ) {
+		notes.splice(i,1);
+		break;
+	    }
+	}
+	hb.sPanel.update();
+	hb.sPanel.showSpNotes(note.start);
     };
 
     initNoteEditDialog();

@@ -59,7 +59,15 @@ a {
 
 #HB_title_r {
     text-align: right;
-};
+}
+
+hr {
+  border-top: 1px dotted #f00;
+  color: #333333;
+  background-color: #333333;
+  height: 1px;
+}
+
 
 // Datatables stuff.
 // theme roller doesn't quite cut it.

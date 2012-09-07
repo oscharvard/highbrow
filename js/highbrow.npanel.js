@@ -37,9 +37,17 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	    var action    = event.target.getAttribute('data-action');
 	    var note      = noteAtPath(event.target.getAttribute('data-note'));
 	    if ( action === 'edit' ) {
-		hb.editor.editNote(note);
+		if ( note.parent ) {
+		    hb.editor.editReply(note.parent,note);
+		} else {
+		    hb.editor.editNote(note);
+		}
 	    } else if ( action === 'delete' ) {
-		hb.editor.deleteNote(note);
+		if ( note.parent ) {
+		    hb.editor.deleteReply(note);
+		} else {
+		    hb.editor.deleteNote(note);
+		}
 	    } else if ( action === 'reply' ) {
 		hb.editor.editReply(note);
 	    } else {
@@ -50,8 +58,8 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
     };
     
     var noteIsEditable = function(note) {
-	if ( note.hasOwnProperty('uid') ) {
-	    return note.uid = hb.user.uid;
+	if ( note.hasOwnProperty('user_id') ) {
+	    return note.user_id === hb.user.id;
 	} else if ( note.hasOwnProperty('track') ) {
 	    // TODO: get rid of this.
 	    return note.track.editable;
@@ -72,8 +80,31 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	return editLinks;
     };
 
+    var renderAttribution = function(note) {
+	var html='<div>';
+	if ( note.hasOwnProperty('author') ) {
+	    html += 'by ' + note.author.name ;
+	}
+	if ( note.hasOwnProperty('track') ) {
+	    if ( note.track.hasOwnProperty('author') ) {
+		html += 'by ' + note.track.author.name + ' ';
+	    }
+	    html += 'in commentary <em>' + note.track.name + '</em>';
+	}
+	html += '</div>';
+	return html;
+    };
+
+    var renderReferenceText = function(note){
+	// think about.. no time to implement now.
+	if ( note.hasOwnProperty('start') ){
+	    return "";
+	}
+	return "";
+    };
+
     var renderNote = function(noteIndex,note){
-	var html = '<li>';
+	var html = '<li style="border-top: 1px dotted gray; list-style: none; margin-top: 6px; padding-top: 6px;">';
 	var morehypertext="";
 	if ( note.sloc ) {
 	    morehypertext = note.sloc;
@@ -87,13 +118,19 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	    morelink = "[&nbsp;<a target='newtab' href='" + base + note.url + "'>" + morehypertext + "</a>&nbsp;]"; 
 	}
 	var content = note.content ? note.content : note.pre;
-	var title   = note.title   ? (note.title + "<br/>")  : "";
+	var title   = note.title   ? ('<div>' + note.title + "<div/>")  : "";
 	var editLinks = hb.user ? renderEditLinks(noteIndex,note) : "";
-	html += title + content + " " + morelink + editLinks;
+	var attribution = renderAttribution(note);
+	var referenceText = renderReferenceText(note);
+	html += referenceText + title + attribution + content + " " + morelink + editLinks;
 	if ( note.hasOwnProperty("replies") ) {
-	    html+="<ul>";
+	    html+='<ul class="$HBnoteList">';
 	    var replies = note.replies;
 	    $.each(replies, function(replyIndex, reply) {
+		if ( reply.hasOwnProperty("parent_id") && ! reply.hasOwnProperty("parent")){
+		    //console.log("attaching parent. is the necessary?");
+		    reply.parent = note;
+		}
 		html+= renderNote(""+noteIndex+"."+replyIndex, reply);
 	    });
 	    html+="</ul>";
@@ -104,7 +141,7 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 
     nPanel.showSpNotes = function(sp) {
 	//$(nPanel.element).html("Will show notes at sp: " + sp);
-	var html = "<ul>";
+	var html = '<ul class="$HBnoteList">';
 	notes = hb.getNotes(hb.getInspectableTracks(),{ start: sp, stop: sp });
 	var spa = sp;
 	var spz = sp;
@@ -117,7 +154,7 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	if ( notes.length === 0 ) {
 	    html = "No overlapping notes.";
 	}
-	$(nPanel.element).html(html);
+	$(nPanel.element).html(hb.pre(html));
 	return { start: spa, stop: spz };
     };
 
