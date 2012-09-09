@@ -68,6 +68,13 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	}
     };
 
+    var ellipsizeNoteSequence = function(note){
+	if (hb.len(note) > 50) {
+	    return hb.getRawSequence(note.start,note.start+30) + '...' + hb.getRawSequence(note.stop-20, note.stop);
+	}
+	return hb.getRawSequence(note.start,note.stop);
+    };
+    
     var renderEditLinks = function(noteIndex,note){
 	var addAction = function(action){
 	    return '<a href="" data-action="' + action + '" data-note="' + noteIndex + '">' + action + '</a>';
@@ -98,7 +105,7 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
     var renderReferenceText = function(note){
 	// think about.. no time to implement now.
 	if ( note.hasOwnProperty('start') ){
-	    return "";
+	    return '<div>In reference to: &quot;' + ellipsizeNoteSequence(note) + '&quot;</div>';
 	}
 	return "";
     };
@@ -122,7 +129,7 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	var editLinks = hb.user ? renderEditLinks(noteIndex,note) : "";
 	var attribution = renderAttribution(note);
 	var referenceText = renderReferenceText(note);
-	html += referenceText + title + attribution + content + " " + morelink + editLinks;
+	html += title + attribution + referenceText + content + " " + morelink + editLinks;
 	if ( note.hasOwnProperty("replies") ) {
 	    html+='<ul class="$HBnoteList">';
 	    var replies = note.replies;
