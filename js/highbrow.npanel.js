@@ -139,12 +139,11 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	return html;
     };
 
-    nPanel.showSpNotes = function(sp) {
-	//$(nPanel.element).html("Will show notes at sp: " + sp);
+    nPanel.showSpNotes = function(range) {
 	var html = '<ul class="$HBnoteList">';
-	notes = hb.getNotes(hb.getInspectableTracks(),{ start: sp, stop: sp });
-	var spa = sp;
-	var spz = sp;
+	notes = hb.getNotes(hb.getInspectableTracks(),range);
+	var spa = range.start;
+	var spz = range.stop;
 	$.each(notes, function(noteIndex, note) {
 	    html += renderNote(noteIndex, note);
 	    spa = spa < note.start ? spa : note.start;
@@ -155,7 +154,6 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 	    html = "No overlapping notes.";
 	}
 	$(nPanel.element).html(hb.pre(html));
-	return { start: spa, stop: spz };
     };
 
     attachListeners();

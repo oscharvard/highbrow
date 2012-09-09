@@ -70,20 +70,41 @@ Highbrow.SequencePanel = this.Highbrow.SequencePanel = function(hb,conf) {
 	    });	
     };
 
-    sPanel.showSpNotes = function(sp){
-	var rangeOfAllOverlappingNotes = hb.nPanel.showSpNotes(sp);
-	sPanel.markNotesContainedInRange({start:sp, stop:sp},rangeOfAllOverlappingNotes);
+
+    var getRangeOfAllOverlappingNotes = function(range){
+	var notes = hb.getNotes(hb.getInspectableTracks(),range);
+	var spa = range.start;
+	var spz = range.stop;
+	$.each(notes, function(noteIndex, note) {
+	    spa = spa < note.start ? spa : note.start;
+	    spz = spz > note.stop ?  spz : note.stop;
+	});
+	return { start: spa, stop: spz };
     };
 
-    sPanel.markNotesContainedInRange = function(r,R){
-	// annoying. text-decoration-style only works in firefox.  the
-	// idea was to show the narrowest and widest regions
-	// simultaneously.  not sure how to do that in a non-retarded
-	// way otherwise.  rethink. I'd like to also have mouseover in
-	// the notes panel inicate the annotated region somehow here.
-	// another issue to keep in mind is it's nice to show the empty chunk if there's nothing.
-	// question: should this be a configuration issue? specify whether selection is by sf or by all overlaps.
-	// might be a lot more intuitive for end users than this weird shit.
+    var getSmallestNote = function(range){
+	var notes = hb.getNotes(hb.getInspectableTracks(),range);
+	var smallestNote = null;
+	$.each(notes, function(noteIndex, note) {
+	    if (smallestNote == null || hb.len(note) <= hb.len(smallestNote)){
+		smallestNote = note;
+	    }
+	});
+	return smallestNote;
+    };
+
+    sPanel.showSpNotes = function(sp){
+	var range = getSmallestNote({'start':sp, 'stop':sp});
+	if ( ! range ) {
+	    // no overlapping note.
+	    range = ({'start':sp, 'stop':sp});
+	}
+	hb.nPanel.showSpNotes(range);
+	markInRange(range);
+    };
+
+    var markInRange = function(r){
+	// for now, overlapping range. maybe add option for contains.
 	$("#"+sPanel.element.id + " span").each(function(){
 		var chunk = $(this);
 		var chunkSpa = chunk.attr("data-spa");
@@ -91,12 +112,7 @@ Highbrow.SequencePanel = this.Highbrow.SequencePanel = function(hb,conf) {
 		if ( hb.overlaps(r.start,r.stop, chunkSpa,chunkSpz) ) {
 		    chunk.css("text-decoration","underline");
 		    chunk.css("text-decoration-style","solid");
-		    //chunk.css("border-bottom", "1px solid blue");
-		} else if ( hb.noteMarkMode === "expansive" && hb.contains(R.start,R.stop,chunkSpa,chunkSpz ) ) {
-		    chunk.css("text-decoration","underline");
-		    chunk.css("text-decoration-style","dotted");
 		} else {
-		    //chunk.css("border-bottom", "");
 		    chunk.css("text-decoration","none");
 		}
 	    });
@@ -268,7 +284,6 @@ Highbrow.SequencePanel = this.Highbrow.SequencePanel = function(hb,conf) {
 	    }
 	    rows.push(row);
 	}
-	// reinos: commented out for demo. (restored for hb.js)
 	var heatmapBounds = sPanel.getHeatmapBounds(rows);
 	sPanel.applyHeatmap(heatmapBounds,rows);
 	return [rows,minNoteCount,maxNoteCount];
