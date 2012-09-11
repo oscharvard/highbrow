@@ -6,7 +6,7 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
     if (! (this instanceof Highbrow.SettingsDialog)) throw "called Highbrow.SettingsDialog constructor as if it were a function: missing 'new'.";
 
     var ttId    = hb.prefix + "tt"; // track table
-    var gtId    = hb.previx + "gt"; // group table
+    var gtId    = hb.prefix + "gt"; // group table
 
     var ttDivId = hb.prefix + "ttDiv";
 
@@ -97,41 +97,43 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
     var attachListeners = function(){
 	var selector = '.' + hb.prefix +'trackTitle';
 	$("#"+ttDivId).on("click",selector,function(event){
-		// make clicked title editable.
-		event.preventDefault();
-		var target = event.target;
-		var trackId = target.getAttribute('data-track');
-		if ( ! trackId ) {
-		    return;
-		}
-		var row = target.getAttribute('data-row');
-		var col = target.getAttribute('data-col');
-		var track = hb.trackById[trackId];
-		event.target.innerHTML = tag('input', 
-					     {'type': 'text',
-					      'value': track.name, 
-					      'data-track': trackId,
-					      'data-row':row,
-					      'data-col':col
-					     });   
-	    });
+	    // make clicked title editable.
+	    event.preventDefault();
+	    var target = event.target;
+	    var trackId = target.getAttribute('data-track');
+	    if ( ! trackId ) {
+		return;
+	    }
+	    var row = target.getAttribute('data-row');
+	    var col = target.getAttribute('data-col');
+	    var track = hb.trackById[trackId];
+	    if ( ! track.editable ){
+		return;
+	    }
+	    event.target.innerHTML = tag('input', 
+					 {'type': 'text',
+					  'value': track.name, 
+					  'data-track': trackId,
+					  'data-row':row,
+					  'data-col':col
+					 });   
+	});
 	$("#"+ttDivId).on("blur",selector+" input",function(event){
 		updateTrackName(event);
-	    });
+	});
 	$("#"+ttDivId).on("keydown",selector+" input",function(event){
-		hb.event=event;
-		if ( event.keyCode === 13 ) {
-		    updateTrackName(event);
-		}
-	    });
+	    hb.event=event;
+	    if ( event.keyCode === 13 ) {
+		updateTrackName(event);
+	    }
+	});
     };
-
+    
     var updateTrackName = function(event){
 	var target = event.target;
 	var trackId = target.getAttribute('data-track');
-	var row = target.getAttribute('data-row');
-	var col = target.getAttribute('data-col');
-	var track = hb.trackById[trackId];
+	var row = parseInt(target.getAttribute('data-row'));
+	var col = parseInt(target.getAttribute('data-col'));
 	var t = hb.trackById[trackId];
 	t.name = target.value;
 	$('#'+ttId).dataTable().fnUpdate( t.name, row, col );
