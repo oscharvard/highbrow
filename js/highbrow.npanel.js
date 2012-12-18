@@ -33,26 +33,30 @@ Highbrow.NotesPanel = this.Highbrow.NotesPanel = function(hb,conf) {
 
     var attachListeners = function(){
 	$("#"+nPanel.element.id).on("click","a",function(event){
-	    event.preventDefault();
-	    var action    = event.target.getAttribute('data-action');
-	    var note      = noteAtPath(event.target.getAttribute('data-note'));
-	    if ( action === 'edit' ) {
-		if ( note.parent ) {
-		    hb.editor.editReply(note.parent,note);
+	    var notePath = event.target.getAttribute('data-note');
+	    if  ( notePath ) {
+		// if no notepath then presumably a regular link.
+		event.preventDefault();
+		var action    = event.target.getAttribute('data-action');
+		var note      = noteAtPath(notePath);
+		if ( action === 'edit' ) {
+		    if ( note.parent ) {
+			hb.editor.editReply(note.parent,note);
+		    } else {
+			hb.editor.editNote(note);
+		    }
+		} else if ( action === 'delete' ) {
+		    if ( note.parent ) {
+			hb.editor.deleteReply(note);
+		    } else {
+			hb.editor.deleteNote(note);
+		    }
+		} else if ( action === 'reply' ) {
+		    hb.editor.editReply(note);
 		} else {
-		    hb.editor.editNote(note);
+		    nPanel.testNote= notes;
+		    throw "Unknown data-action: " + action;
 		}
-	    } else if ( action === 'delete' ) {
-		if ( note.parent ) {
-		    hb.editor.deleteReply(note);
-		} else {
-		    hb.editor.deleteNote(note);
-		}
-	    } else if ( action === 'reply' ) {
-		hb.editor.editReply(note);
-	    } else {
-		nPanel.testNote= notes;
-		throw "Unknown data-action: " + action;
 	    }
 	});
     };
