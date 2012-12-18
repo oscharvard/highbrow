@@ -1,5 +1,7 @@
 
 Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
+    
+    // Abbreviations: TT = Track Table ; GT = Group Table
 
     "use strict;"
 
@@ -8,7 +10,8 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
     var ttId    = hb.prefix + "tt"; // track table
     var gtId    = hb.prefix + "gt"; // group table
 
-    var ttDivId = hb.prefix + "ttDiv";
+    var ttDivId = ttId + "Div";
+    var gtDivId = gtId + "Div";
 
     var ttData  = [];
     var ttCols  = [];
@@ -19,6 +22,8 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
 
     var ttjqd  ="";
 
+    var currentGroup=null;
+
     // public methods.
 
     this.onDraw = function(){
@@ -27,7 +32,7 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
 	// Actually it doesn't.
 	if ( newTT && $('#'+ttId).length > 0 ) {
 	    dataTabulate('#'+ttId,ttData,ttCols);
-	    //dataTabulate('#'+gtId,gtData,gtCols);
+	    dataTabulate('#'+gtId,gtData,gtCols);
 	    newTT=false;
 	}
     };
@@ -36,22 +41,28 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
 	var row = [t.id,t.visible,t.order,t.name,t.type,hb.notecount(t)];
 	$('#'+ttId).dataTable().fnAddData(row);
 	if ( t.type != "group" ) {
-	    //$('#'+gtId).dataTable().fnAddData(row);
+	    $('#'+gtId).dataTable().fnAddData(row);
 	};
     };
 
     var showTT = function(){
-	// show the darn dialog.
 	dataTabulate(ttId,ttData,ttCols);
 	ttjqd.dialog('open');
 	return false;
     };
 
+    
+    var showGT = function(){
+	dataTabulate(gtId,gtData,gtCols);
+	gtjqd.dialog('open');
+	return false;
+    };
+
+
     var groupLink = function(trackId){
 	var t = hb.trackById[trackId];
 	if ( t.type == "group" ) {
-	    var onclick = "HB.openGroupEditDialog('" + t.id + "'); return false;";
-	    return t.type + " (<a href=\"x\" class=\"groupEditLink\" onclick=\""+onclick+"\">" + t.trackIds.length  + " members </a>)";
+	    return hb.pre(t.type + ' (<a href="x" data-track="' + t.id + '" class="$HBgroupEditLink">' + t.trackIds.length  + ' members </a>)');
 	}
 	return t.type;
     };
@@ -86,11 +97,31 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
     { "width" : "200px", "sTitle": "Notes" }
 		     ];
     };
+
+    var initGT = function(){
+	newGT=true;
+	for ( var i = 1; i < hb.tracks.length; i++ ) {
+	    var t = hb.tracks[i];
+	    if ( t.type != "group" ) {
+		gtData.push( [ t.id, false, t.order, t.name, t.type, hb.notecount(t) ] );
+	    }
+	}
+	gtCols = [
+	    { "sTitle": "id", "bVisible" : false, "width" : "0px" },
+	    { "width" : "100px", "sTitle": "Member?", "fnRender": function(cell) { return hb.cb( cell.aData[1], { "id" : "gcb"+cell.aData[0] }); } },
+	    { "width" : "100px", "sTitle": "Order" },
+	    { "width" : "200px", "sTitle": "Name" },
+	    { "width" : "200px", "sTitle": "Type", "fnRender": function(cell) { return groupLink(cell.aData[0]);}},
+	    { "width" : "200px", "sTitle": "Notes" }
+	];
+    };
     
     var init = function(){
 	$("#"+hb.prefix + "showSettingsDialog").click(function(e) { showTT() ; e.preventDefault(); });
 	initTT();
 	initTTJQD();
+	initGT();
+	initGTJQD();
 	attachListeners();
     };
 
@@ -127,6 +158,19 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
 		updateTrackName(event);
 	    }
 	});
+	$("#"+gtDivId).on("click",hb.pre('$HBgroupEditLink href'),function(event){
+	    alert("REINOS: group link click!");
+	    currentGroup = trackById[event.target.getAttribute('data-track')];
+	    // REINOS: update selection state of track in group.
+	    //for ( var i = 1; i < allTracks.length; i++ ) {
+	    //	var t = allTracks[i];
+	    //	boolean isTrackInGroup = $.inArray(t.id,currentGroup.trackIds) > -1;
+	    //	$("#gcb"+t.id).prop("checked",isTrackInGroup);
+	    //}
+	    //return openDialog(groupEditDialog);
+	    showGT();
+	    event.preventDefault();
+	});
     };
     
     var updateTrackName = function(event){
@@ -152,6 +196,39 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
 	}
 	return html;
     }; 
+
+    var initGTJQD = function(){
+	var html = '<p class="hb_misc">Check the annotation tracks that you would like to include in this group.</p>';
+	html += '<div id="'+gtDivId + '"><table cellpadding="0" cellspacing="0" border="0" class="display" id="$HBgroupEditTable"></table></div>';
+	gtjqd = $('<div class="hb_misc"></div>')
+	    .html(hb.pre(html))
+	    .dialog({
+		autoOpen: false,
+		title: 'Configure Commentary Group',
+		height: 520,
+		width: 650,
+		buttons:
+		{
+		    "Apply": function()  {
+			var groupTrackIds = [];
+			currentGroup.notecount=0;
+			for (var i=1; i < hb.tracks.length; i++ ) {
+			    var t = hb.tracks[i];
+			    var isSelected = $("#gcb"+t.id+":checked").val() !== undefined;
+			    if ( isSelected ) {
+				groupTrackIds.push(t.id);
+				currentGroup.notecount += hb.notecount(t);
+			    }
+			}
+			currentGroup.trackIds = groupTrackIds;
+			// REINOS: this might need to be fixed.
+			//refreshTrackTables();
+			hb.filterTracks();
+			hb.adjustBounds();
+		    }
+		}
+	    });
+    };
 
     var initTTJQD = function(){
 	// initialized track table jquery dialog widget.
@@ -191,7 +268,6 @@ Highbrow.SettingsDialog = this.Highbrow.SettingsDialog = function(hb,conf) {
 			    debug+="t.id: " + t.id + " visible? " + t.visible;
 			    debug+="\n";
 			}
-			//alert("Debug: " + debug);
 			hb.filterTracks();
 			hb.adjustBounds();
 		    }

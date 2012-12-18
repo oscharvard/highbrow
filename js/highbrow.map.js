@@ -137,7 +137,7 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 	    }
 	    var a = map.sp(p.mouseX);
 	    var z = map.sp(p.mouseX+1);
-	    // select the clicked on structural feature.
+	    // select the clicked on section.
 	    var structureTrack = hb.visibleTracks[0];
 	    var notes = structureTrack.notes;
 	    var bottomVisibleLevel = map.bottomVisibleLevel();
@@ -271,11 +271,11 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 	map.p.textFont(map.fancyFont);			
 	map.p.textSize(9);
 	map.p.textAlign(map.p.CENTER,map.p.CENTER);
-	map.drawNotes(t,map.drawStructuralFeature);
+	map.drawNotes(t,map.drawTieredSection);
 	map.p.textAlign(map.p.LEFT,map.p.BOTTOM)
     };
 
-    map.drawStructuralFeature = function (t,f,fi,min,max){
+    map.drawTieredSection = function (t,f,fi,min,max){
 	// draw one or two tiered structural bands appropriate for current zoom level
 	// Bible: book -> chapter -> verse
 	// Plato: dialog -> [book number] -> stephanus number -> section letter.
@@ -295,7 +295,7 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 	    map.descendStructureTier(f,y,height,"",1,bottomVisibleLevel);
 	} else {
 	    // draw 1 tier. Only show top level (eg., biblical books).
-	    map.drawSimpleStructuralFeature(f,fi,y,height,f.name);  
+	    map.drawSimpleSection(f,fi,y,height,f.name);  
 	}
     };
 
@@ -314,8 +314,8 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
     };
 
     map.drawTieredStructure = function(top,bottoms,y,height,topPrefix){
-	map.drawSimpleFeatures([top],y-height,height,topPrefix);
-	map.drawSimpleFeatures(bottoms,y,height,"");
+	map.drawSections([top],y-height,height,topPrefix);
+	map.drawSections(bottoms,y,height,"");
     };
 
     map.bottomVisibleLevel = function(){
@@ -334,14 +334,16 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 	return 0;
     };
 
-    map.drawSimpleFeatures = function(features,y,height,labelPrefix) {
-	for (var i=0; i < features.length; i++){  
-	    var n = features[i];
-	    map.drawSimpleStructuralFeature(n,n.hasOwnProperty('li') ? n.li : i,y,height,labelPrefix + n.name);  
+    map.drawSections = function(sections,y,height,labelPrefix) {
+	// draw a horizonal band of simple sections.
+	for (var i=0; i < sections.length; i++){  
+	    var n = sections[i];
+	    map.drawSimpleSection(n,n.hasOwnProperty('li') ? n.li : i,y,height,labelPrefix + n.name);  
 	}
     };
 
-    map.drawSimpleStructuralFeature = function(f,fi,y,h,label) {
+    map.drawSimpleSection = function(f,fi,y,h,label) {
+	// draws a colored box with a label.
 	// label must be a STRING.
 	label = label.replace(/\s+/g," ",label);
 	map.alternateColor(fi,hb.GOLD,153);
@@ -582,6 +584,8 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 
     map.countPxNotes = function(t,notes){
 	// count number of ref characters overlapping each visible pixel.
+	// reinos: should be note based, not character based.
+	// how to deal with jitteryiness...
 	t['min'] = 0;
 	t['max'] = 0;    		      
 	t.pxScore = hb.newFilledArray(map.plotWidth,0);
@@ -592,10 +596,15 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 		var a = map.visiblePxInt(n.start+1);
 		var z = map.visiblePxInt(n.stop)+1;
 		for (var i=a; i <=z; i++ ) {
-		    var pxStart = map.sp(i);
-		    var pxStop  = map.sp(i+1);
-		    if ( true || hb.overlaps(n.start,n.stop,pxStart,pxStop)) {
-			t.pxScore[i]+=hb.getOverlapCharCount(n.start,n.stop,pxStart,pxStop);
+		    var pxStartChar = map.sp(i);
+		    var pxStopChar  = map.sp(i+1);
+		    if ( true || hb.overlaps(n.start,n.stop,pxStartChar,pxStopChar)) {
+			// reinos: ok, this is the logic: 50/50 rule: score is 1 if 
+			// pixel contains 50-100% of note OR note overlaps 50-100% of pixel.
+			var overlap = hb.getOverlapCharCount(n.start,n.stop,pxStartChar,pxStopChar);
+			if ( (overlap >= hb.len(n)/2) || (overlap >= (pxStopChar-pxStartChar)) ) {
+			    t.pxScore[i]+=1;
+			}
 			map.updateMinMax(t.pxScore[i],t);
 		    }
 		}
