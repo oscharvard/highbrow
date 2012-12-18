@@ -7,9 +7,13 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 
     if (! (this instanceof Highbrow.Map)) throw "called Highbrow.Map constructor as if it were a function: missing 'new'.";
     var map = this;
+    var scored = false;
+
+
 
     map.init = function(){
 	map.canvas = document.getElementById(conf.mapPanel);
+	map.scorecount=0;
 	map.normalized = {};
 	map.setBounds();
 	map.minCharPerPx = conf.minCharPerPx;
@@ -227,9 +231,10 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
     };
 	
     map.drawTracks = function(){
-	map.normalized.min = Number.MAX_VALUE;
-	map.normalized.max = 0;	
-	map.scorePixels(hb.visibleTracks);
+	//reinos
+	if ( ! scored ) {
+	    map.scorePixels(hb.visibleTracks);
+	}
 	for (var ti=0; ti < hb.visibleTracks.length; ti++ ) {
 	    var t = hb.visibleTracks[ti];
 	    if ( t.type == 'structure') {
@@ -505,6 +510,9 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 	//if ( oldLength != newLength ) {
 	//updateCurrentLevel();
 	//}
+	// reinos: we only need to do this when the viewport changes, right?
+	scored = false;
+
     };
 
     map.pan = function (factor){
@@ -538,6 +546,9 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
     // Track Pixel Scoring methods.
 
     map.scorePixels = function(tracks){
+	map.scorecount++;
+	map.normalized.min = Number.MAX_VALUE;
+	map.normalized.max = 0;
 	for (var i=0; i < tracks.length; i++ ) {
 	    var t = tracks[i];
 	    if ( t.type === "group" ) {
@@ -546,6 +557,7 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
 		map.scorePixelsForTrack(t);
 	    }
 	}
+	scored = true;
     };
 
     map.scorePixelsForGroup = function(g){
@@ -583,9 +595,6 @@ Highbrow.Map = this.Highbrow.Map = function(hb,conf) {
     };
 
     map.countPxNotes = function(t,notes){
-	// count number of ref characters overlapping each visible pixel.
-	// reinos: should be note based, not character based.
-	// how to deal with jitteryiness...
 	t['min'] = 0;
 	t['max'] = 0;    		      
 	t.pxScore = hb.newFilledArray(map.plotWidth,0);

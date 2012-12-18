@@ -9,7 +9,7 @@
 
 var Highbrow = this.Highbrow = function(conf) {
 
-    Highbrow.version=0.11;
+    Highbrow.version=0.12;
 
     // The Highbrow object represents the entire widget.  Composed of:
     // Map, Sequence Panel, Notes Panel (and possible additional data
